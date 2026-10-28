@@ -1,0 +1,4374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spelling Bee Practice App (Scripps 2026-2027)</title>
+  <style>
+:root {
+  --primary: #f59e0b;
+  --primary-hover: #d97706;
+  --primary-light: #fef3c7;
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+
+  /* Highlighting Colors from User's Sheets */
+  --easy-pink: #f43f5e;
+  --easy-pink-bg: #ffe4e6;
+  --easy-pink-border: #fca5a5;
+
+  --mid-blue: #0284c7;
+  --mid-blue-bg: #e0f2fe;
+  --mid-blue-border: #7dd3fc;
+
+  --hard-purple: #8b5cf6;
+  --hard-purple-bg: #f3e8ff;
+  --hard-purple-border: #c4b5fd;
+
+  --unmarked-gray: #64748b;
+  --unmarked-gray-bg: #f1f5f9;
+
+  --success: #10b981;
+  --success-bg: #d1fae5;
+  --danger: #ef4444;
+  --danger-bg: #fee2e2;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-icon {
+  font-size: 2.2rem;
+  animation: floatBee 3s ease-in-out infinite;
+}
+
+@keyframes floatBee {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(5deg); }
+}
+
+.brand-text h1 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(to right, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-text p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.25rem;
+  border-radius: 9999px;
+}
+
+.nav-tab-btn {
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-tab-btn.active {
+  background: #f59e0b;
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+}
+
+/* Main Container */
+main {
+  flex: 1;
+  max-width: 1000px;
+  width: 100%;
+  margin: 1.5rem auto;
+  padding: 0 1rem 2rem 1rem;
+}
+
+/* Common Card */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Difficulty Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-easy {
+  background-color: var(--easy-pink-bg);
+  color: var(--easy-pink);
+  border: 1px solid var(--easy-pink-border);
+}
+
+.badge-middle {
+  background-color: var(--mid-blue-bg);
+  color: var(--mid-blue);
+  border: 1px solid var(--mid-blue-border);
+}
+
+.badge-hard {
+  background-color: var(--hard-purple-bg);
+  color: var(--hard-purple);
+  border: 1px solid var(--hard-purple-border);
+}
+
+.badge-unmarked {
+  background-color: var(--unmarked-gray-bg);
+  color: var(--unmarked-gray);
+  border: 1px solid #cbd5e1;
+}
+
+.badge-grade {
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.45);
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #cbd5e1;
+  color: #475569;
+}
+
+.btn-outline:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.btn-voice {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  color: #1d4ed8;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.btn-voice:hover {
+  background: #dbeafe;
+}
+
+/* Screen 1: Quiz Setup */
+.setup-view {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.setup-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.setup-header h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.setup-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.config-group {
+  margin-bottom: 1.75rem;
+}
+
+.config-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #334155;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-label span.note {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.word-count-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill-option {
+  padding: 0.5rem 1.1rem;
+  border-radius: 9999px;
+  border: 2px solid var(--border);
+  background: #ffffff;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill-option:hover {
+  border-color: #94a3b8;
+}
+
+.pill-option.active {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.custom-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.custom-input-wrapper input {
+  width: 90px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--border);
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1e293b;
+  outline: none;
+  text-align: center;
+}
+
+.custom-input-wrapper input:focus {
+  border-color: #f59e0b;
+}
+
+.difficulty-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+
+.diff-filter-card {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--border);
+  background: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.diff-filter-card:hover {
+  border-color: #94a3b8;
+}
+
+.diff-filter-card.active {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.diff-filter-card.diff-all.active {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.diff-filter-card.diff-easy.active {
+  border-color: var(--easy-pink);
+  background: var(--easy-pink-bg);
+}
+
+.diff-filter-card.diff-middle.active {
+  border-color: var(--mid-blue);
+  background: var(--mid-blue-bg);
+}
+
+.diff-filter-card.diff-hard.active {
+  border-color: var(--hard-purple);
+  background: var(--hard-purple-bg);
+}
+
+.diff-filter-title {
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.diff-filter-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.start-btn-container {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.start-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.15rem;
+  border-radius: 1rem;
+}
+
+/* Screen 2: Active Quiz */
+.quiz-view {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.quiz-progress-text {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #334155;
+}
+
+.quiz-score-badge {
+  background: #ecfdf5;
+  color: #047857;
+  font-weight: 700;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  border: 1px solid #a7f3d0;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #10b981);
+  transition: width 0.3s ease;
+}
+
+.spelling-card {
+  text-align: center;
+  padding: 2.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.word-meta-tags {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Pronunciation & Clue Section */
+.listen-hero-btn {
+  padding: 1.1rem 2rem;
+  font-size: 1.25rem;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+
+.listen-hero-btn:hover {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  transform: translateY(-2px);
+}
+
+.bee-clues-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.clue-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #334155;
+  animation: fadeIn 0.25s ease;
+}
+
+.blanked-word {
+  display: inline-block;
+  min-width: 80px;
+  border-bottom: 3px solid #0284c7;
+  color: #0284c7;
+  font-weight: 800;
+  text-align: center;
+  padding: 0 6px;
+  background: #e0f2fe;
+  border-radius: 3px 3px 0 0;
+  letter-spacing: 2px;
+  user-select: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.clue-box strong {
+  color: #0f172a;
+}
+
+/* Live Letter Boxes */
+.letter-display-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  min-height: 70px;
+  padding: 1rem;
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.letter-display-container.active-listening {
+  border-color: #ef4444;
+  background: #fff1f2;
+}
+
+.letter-box {
+  width: 44px;
+  height: 52px;
+  background: #ffffff;
+  border: 2px solid #94a3b8;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0f172a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.letter-box.space {
+  width: 24px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.letter-placeholder {
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 500;
+  font-style: italic;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Microphone Area */
+.mic-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.mic-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.mic-btn:hover {
+  transform: scale(1.05);
+}
+
+.mic-btn.recording {
+  animation: pulseMic 1.5s infinite;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+}
+
+@keyframes pulseMic {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 22px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.mic-label {
+  margin-top: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #334155;
+}
+
+.mic-hint {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Live Speech Waveform Indicator */
+.listening-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  margin-top: 0.5rem;
+}
+
+.wave-bar {
+  width: 4px;
+  height: 6px;
+  background-color: #ef4444;
+  border-radius: 2px;
+  animation: soundWave 1s ease-in-out infinite alternate;
+}
+
+.wave-bar:nth-child(2) { animation-delay: 0.2s; }
+.wave-bar:nth-child(3) { animation-delay: 0.4s; }
+.wave-bar:nth-child(4) { animation-delay: 0.1s; }
+.wave-bar:nth-child(5) { animation-delay: 0.3s; }
+
+@keyframes soundWave {
+  0% { height: 4px; }
+  100% { height: 22px; }
+}
+
+/* Action Controls (Clear, Submit, Manual Input) */
+.spelling-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.manual-input-toggle {
+  color: #64748b;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  background: none;
+  border: none;
+}
+
+.manual-input-box {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.manual-input-box input {
+  padding: 0.6rem 1rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 280px;
+  width: 100%;
+}
+
+.manual-input-box input:focus {
+  border-color: #0284c7;
+  outline: none;
+}
+
+/* Feedback Alert Banner */
+.feedback-box {
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  margin-top: 1.5rem;
+  text-align: center;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feedback-box.correct {
+  background: var(--success-bg);
+  border: 2px solid var(--success);
+  color: #065f46;
+}
+
+.feedback-box.incorrect {
+  background: var(--danger-bg);
+  border: 2px solid var(--danger);
+  color: #991b1b;
+}
+
+.feedback-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.feedback-details {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.spelled-comparison {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  font-family: monospace;
+  font-size: 1.1rem;
+  margin: 0.25rem 0;
+}
+
+.feedback-audio-btn {
+  margin-top: 0.5rem;
+}
+
+.next-word-btn {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 250px;
+}
+
+/* Screen 3: Round Results */
+.results-view {
+  max-width: 750px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.trophy-icon {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.results-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.score-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  margin: 1.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.35);
+}
+
+.score-percent {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.score-fraction {
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-top: 0.2rem;
+}
+
+.results-action-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-top: 1.5rem;
+}
+
+.breakdown-table th, .breakdown-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.breakdown-table th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #475569;
+}
+
+/* Screen 4: Word Bank Explorer */
+.wordbank-view {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.bank-filter-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.bank-search-input {
+  flex: 1;
+  min-width: 220px;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.bank-search-input:focus {
+  border-color: #f59e0b;
+}
+
+.bank-select {
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+  outline: none;
+}
+
+.word-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.word-tile {
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.word-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.word-tile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.word-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.word-tile-def {
+  font-size: 0.825rem;
+  color: #475569;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.word-tile-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.difficulty-picker-select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background: white;
+}
+
+/* Confetti Canvas */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .header-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nav-tabs {
+    justify-content: center;
+  }
+  .card {
+    padding: 1.25rem;
+  }
+  .letter-box {
+    width: 36px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
+}
+
+</style>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐝</text></svg>">
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">🐝</div>
+        <div class="brand-text">
+          <h1>BeeSpeller Champion</h1>
+          <p>Scripps National Spelling Bee Study Companion</p>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <button id="tab-quiz" class="nav-tab-btn active" onclick="switchTab('quiz')">
+          <span>🎯</span> Test Me
+        </button>
+        <button id="tab-bank" class="nav-tab-btn" onclick="switchTab('bank')">
+          <span>📚</span> Word Bank (200)
+        </button>
+        <button id="tab-stats" class="nav-tab-btn" onclick="switchTab('stats')">
+          <span>📊</span> Past Scores
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- TAB 1: QUIZ CONTAINER -->
+    <div id="quiz-tab-content">
+      <!-- 1A: SETUP SCREEN -->
+      <section id="setup-screen" class="setup-view">
+        <div class="card">
+          <div class="setup-header">
+            <h2>Ready to Practice?</h2>
+            <p>Customize your spelling bee session and test your voice spelling.</p>
+          </div>
+
+          <!-- Word Count Picker (X words at a time) -->
+          <div class="config-group">
+            <div class="config-label">
+              <span>Words in Session (X words at a time)</span>
+              <span class="note" id="pool-available-note">200 available</span>
+            </div>
+            <div class="word-count-selector">
+              <button type="button" class="pill-option active" data-count="5" onclick="setWordCount(5)">5 Words</button>
+              <button type="button" class="pill-option" data-count="10" onclick="setWordCount(10)">10 Words</button>
+              <button type="button" class="pill-option" data-count="15" onclick="setWordCount(15)">15 Words</button>
+              <button type="button" class="pill-option" data-count="20" onclick="setWordCount(20)">20 Words</button>
+              <button type="button" class="pill-option" data-count="25" onclick="setWordCount(25)">25 Words</button>
+              <button type="button" class="pill-option" data-count="50" onclick="setWordCount(50)">50 Words</button>
+              <button type="button" class="pill-option" data-count="all" onclick="setWordCount('all')">All Words</button>
+            </div>
+            <div class="custom-input-wrapper">
+              <label for="custom-count-input" style="font-size:0.875rem; color:#64748b;">Or set custom X:</label>
+              <input type="number" id="custom-count-input" min="1" max="200" placeholder="e.g. 8" onchange="setCustomWordCount(this.value)">
+            </div>
+          </div>
+
+          <!-- Difficulty Filter (Pink, Blue, Purple) -->
+          <div class="config-group">
+            <div class="config-label">
+              <span>Filter by Difficulty Highlighting</span>
+            </div>
+            <div class="difficulty-filter-grid">
+              <div class="diff-filter-card diff-all active" onclick="setDifficultyFilter('all')">
+                <div class="diff-filter-title">All Words</div>
+                <div class="diff-filter-count" id="count-all">200 words</div>
+              </div>
+              <div class="diff-filter-card diff-easy" onclick="setDifficultyFilter('easy')">
+                <div class="diff-filter-title" style="color:var(--easy-pink);">🌸 Easy (Pink)</div>
+                <div class="diff-filter-count" id="count-easy">81 words</div>
+              </div>
+              <div class="diff-filter-card diff-middle" onclick="setDifficultyFilter('middle')">
+                <div class="diff-filter-title" style="color:var(--mid-blue);">🌊 Middle (Blue)</div>
+                <div class="diff-filter-count" id="count-middle">75 words</div>
+              </div>
+              <div class="diff-filter-card diff-hard" onclick="setDifficultyFilter('hard')">
+                <div class="diff-filter-title" style="color:var(--hard-purple);">🍇 Hard (Purple)</div>
+                <div class="diff-filter-count" id="count-hard">28 words</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grade Level Filter -->
+          <div class="config-group">
+            <div class="config-label">
+              <span>Grade Level</span>
+            </div>
+            <div class="word-count-selector">
+              <button type="button" class="pill-option active" data-grade="all" onclick="setGradeFilter('all')">All Grades (6-8)</button>
+              <button type="button" class="pill-option" data-grade="6" onclick="setGradeFilter('6')">6th Grade (50)</button>
+              <button type="button" class="pill-option" data-grade="7" onclick="setGradeFilter('7')">7th Grade (50)</button>
+              <button type="button" class="pill-option" data-grade="8" onclick="setGradeFilter('8')">8th Grade (100)</button>
+            </div>
+          </div>
+
+          <!-- Voice & Clue Preferences -->
+          <div class="config-group" style="background:#f8fafc; padding:0.75rem 1rem; border-radius:0.75rem; border:1px solid #e2e8f0; display:flex; flex-direction:column; gap:0.75rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <label for="voice-select" style="font-size:0.875rem; font-weight:700; color:#334155;">Pronunciation Voice:</label>
+                <button type="button" class="btn btn-outline" style="padding:2px 8px; font-size:0.75rem; font-weight:600;" onclick="testCurrentVoice()" title="Preview voice accent">Test Voice 🔊</button>
+              </div>
+              <select id="voice-select" class="bank-select" style="max-width:320px; font-weight:600;"></select>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #e2e8f0; padding-top:0.6rem;">
+              <label for="setup-audio-only-toggle" style="font-size:0.875rem; font-weight:700; color:#334155; cursor:pointer;">
+                🎧 Audio-Only Clues (hide text)
+              </label>
+              <input type="checkbox" id="setup-audio-only-toggle" onchange="toggleAudioOnlyPreference(this.checked)" style="width:18px; height:18px; cursor:pointer;">
+            </div>
+          </div>
+
+          <div class="start-btn-container">
+            <button class="btn btn-primary start-btn" onclick="startQuizSession()">
+              🚀 Start Spelling Bee
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1B: ACTIVE QUIZ SCREEN -->
+      <section id="quiz-screen" class="quiz-view" style="display: none;">
+        <div class="quiz-top-bar">
+          <div class="quiz-progress-text" id="progress-indicator">Word 1 of 10</div>
+          <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+            <select id="quiz-voice-select" class="bank-select" style="padding:0.25rem 0.5rem; font-size:0.8rem; max-width:210px; font-weight:600;" title="Change voice accent"></select>
+            <div class="quiz-score-badge" id="current-score-badge">Score: 0 / 0 (0%)</div>
+            <button class="btn btn-outline" style="padding:0.35rem 0.75rem; font-size:0.8rem;" onclick="confirmExitQuiz()">Exit</button>
+          </div>
+        </div>
+
+        <div class="progress-bar-container">
+          <div id="quiz-progress-bar" class="progress-bar-fill" style="width: 10%;"></div>
+        </div>
+
+        <div class="card spelling-card">
+          <!-- Word Metadata Badges -->
+          <div class="word-meta-tags">
+            <span id="badge-difficulty" class="badge badge-easy">🌸 Easy</span>
+            <span id="badge-grade" class="badge badge-grade">6th Grade</span>
+            <span id="badge-pos" class="badge badge-grade" style="text-transform:lowercase;">noun</span>
+          </div>
+
+          <!-- Hero Button: Read Word Out Aloud -->
+          <button class="btn listen-hero-btn" id="say-word-btn" onclick="pronounceCurrentWord()">
+            🔊 Say Word
+          </button>
+          <div style="font-size:0.85rem; color:#64748b; margin-bottom:1.25rem;">
+            Click to hear the word again, or press <kbd style="background:#e2e8f0; padding:2px 6px; border-radius:4px;">R</kbd>
+          </div>
+
+          <!-- Bee Assistant Clues -->
+          <div class="bee-clues-row">
+            <button class="btn btn-voice" onclick="toggleClue('definition')">📖 Definition</button>
+            <button class="btn btn-voice" onclick="toggleClue('sentence')">💬 Use in Sentence</button>
+            <button class="btn btn-voice" onclick="speakCurrentWordSlowly()">🐢 Say Slowly</button>
+          </div>
+
+          <div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-top:-0.5rem; margin-bottom:1rem; font-size:0.8rem; color:#64748b;">
+            <label style="cursor:pointer; display:flex; align-items:center; gap:0.4rem; user-select:none;">
+              <input type="checkbox" id="audio-only-toggle" onchange="toggleAudioOnlyPreference(this.checked)">
+              <span>🎧 Audio-only clues (hide text completely, official bee style)</span>
+            </label>
+          </div>
+
+          <!-- Clue Drawer -->
+          <div id="clue-box" class="clue-box" style="display:none;"></div>
+
+          <!-- Live Letter Recognition Blocks -->
+          <div style="margin-top:1rem; margin-bottom:0.5rem;">
+            <div style="font-size:0.85rem; font-weight:700; color:#475569; margin-bottom:0.4rem;">
+              YOUR SPELLING:
+            </div>
+            <div id="letter-display" class="letter-display-container">
+              <span class="letter-placeholder">Press the microphone below and spell the word letter by letter</span>
+            </div>
+          </div>
+
+          <!-- Microphone Recording Section -->
+          <div class="mic-section">
+            <button id="mic-btn" class="mic-btn" onclick="toggleMicRecording()" title="Click to speak your spelling">
+              🎤
+            </button>
+            <div id="mic-status-label" class="mic-label">Click to Spell into Microphone</div>
+            <div id="listening-wave" class="listening-indicator" style="display: none;">
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+              <span class="wave-bar"></span>
+            </div>
+            <div class="mic-hint">You can say each letter clearly (e.g. "C... A... T") or spell the whole word</div>
+          </div>
+
+          <!-- Spelling Controls (Backspace, Clear, Submit) -->
+          <div class="spelling-actions">
+            <button class="btn btn-secondary" onclick="handleBackspaceLetter()">⌫ Backspace</button>
+            <button class="btn btn-secondary" onclick="clearLetters()">✖ Clear All</button>
+            <button class="btn btn-primary" id="submit-spelling-btn" onclick="gradeCurrentSpelling()">
+              ✓ Submit Spelling
+            </button>
+          </div>
+
+          <!-- Keyboard / Manual typing toggle -->
+          <div>
+            <button class="manual-input-toggle" onclick="toggleManualInput()">
+              ⌨️ Want to type with keyboard instead? Click here
+            </button>
+            <div id="manual-input-container" class="manual-input-box" style="display: none;">
+              <input type="text" id="manual-spelling-input" placeholder="Type letters..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="handleManualInputKey(event)">
+              <button class="btn btn-secondary" onclick="applyManualInput()">Set</button>
+            </div>
+          </div>
+
+          <!-- Feedback Section (Grading result) -->
+          <div id="feedback-banner" class="feedback-box" style="display: none;">
+            <div id="feedback-title" class="feedback-title"></div>
+            <div id="feedback-details" class="feedback-details"></div>
+            <div id="feedback-speech-action" style="margin-top:0.5rem;"></div>
+            <button id="next-word-btn" class="btn btn-primary next-word-btn" onclick="proceedToNextWord()">
+              Next Word ➔
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 1C: RESULTS SCREEN -->
+      <section id="results-screen" class="results-view" style="display: none;">
+        <div class="card">
+          <div class="trophy-icon" id="results-icon">🏆</div>
+          <div class="results-header">
+            <h2 id="results-headline">Awesome Job!</h2>
+            <p id="results-subtext">You completed this spelling session!</p>
+          </div>
+
+          <div class="score-circle">
+            <div class="score-percent" id="final-score-percent">90%</div>
+            <div class="score-fraction" id="final-score-fraction">9 / 10 Correct</div>
+          </div>
+
+          <div class="results-action-row">
+            <button class="btn btn-primary" id="retry-missed-btn" onclick="retryMissedWords()">
+              🔁 Practice Missed Words (<span id="missed-count-span">0</span>)
+            </button>
+            <button class="btn btn-secondary" onclick="startNewSessionSetup()">
+              ✨ New Practice Session
+            </button>
+          </div>
+
+          <!-- Round Breakdown Table -->
+          <div style="margin-top:2rem; text-align:left;">
+            <h3 style="font-size:1.1rem; color:#1e293b; margin-bottom:0.75rem;">Session Summary</h3>
+            <div style="overflow-x:auto;">
+              <table class="breakdown-table">
+                <thead>
+                  <tr>
+                    <th>Word</th>
+                    <th>Grade</th>
+                    <th>Difficulty</th>
+                    <th>Your Spelling</th>
+                    <th>Result</th>
+                    <th>Listen</th>
+                  </tr>
+                </thead>
+                <tbody id="results-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB 2: WORD BANK EXPLORER -->
+    <div id="bank-tab-content" style="display: none;">
+      <section class="wordbank-view">
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:0.25rem;">Word Bank (200 Words)</h2>
+          <p style="color:#64748b; font-size:0.9rem; margin-bottom:1rem;">
+            Explore all 200 words from your study sheets. Click the speaker to listen, or update any word's difficulty tag.
+          </p>
+
+          <div class="bank-filter-bar">
+            <input type="text" id="bank-search" class="bank-search-input" placeholder="🔍 Search word or definition..." oninput="renderWordBank()">
+            <select id="bank-grade-filter" class="bank-select" onchange="renderWordBank()">
+              <option value="all">All Grades</option>
+              <option value="6">Grade 6 (50)</option>
+              <option value="7">Grade 7 (50)</option>
+              <option value="8">Grade 8 (100)</option>
+            </select>
+            <select id="bank-diff-filter" class="bank-select" onchange="renderWordBank()">
+              <option value="all">All Difficulties</option>
+              <option value="easy">Easy (Pink)</option>
+              <option value="middle">Middle (Blue)</option>
+              <option value="hard">Hard (Purple)</option>
+              <option value="unmarked">Unmarked</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="word-card-grid" class="word-card-grid"></div>
+      </section>
+    </div>
+
+    <!-- TAB 3: STATS & PAST ROUNDS -->
+    <div id="stats-tab-content" style="display: none;">
+      <section class="card" style="max-width:800px; margin:0 auto;">
+        <h2 style="font-size:1.4rem; font-weight:800; margin-bottom:0.5rem;">Your Spelling Journey 📈</h2>
+        <p style="color:#64748b; font-size:0.9rem; margin-bottom:1.5rem;">
+          Track your practice history and master every word before the bee!
+        </p>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1.5rem;">
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1.25rem; border-radius:1rem; text-align:center;">
+            <div style="font-size:2rem; font-weight:800; color:#f59e0b;" id="stat-total-tests">0</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#64748b;">Sessions Completed</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1.25rem; border-radius:1rem; text-align:center;">
+            <div style="font-size:2rem; font-weight:800; color:#10b981;" id="stat-total-words">0</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#64748b;">Words Tested</div>
+          </div>
+          <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1.25rem; border-radius:1rem; text-align:center;">
+            <div style="font-size:2rem; font-weight:800; color:#0284c7;" id="stat-accuracy">0%</div>
+            <div style="font-size:0.85rem; font-weight:700; color:#64748b;">Overall Accuracy</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.1rem; font-weight:700; color:#1e293b; margin-bottom:0.75rem;">Recent Sessions</h3>
+        <div id="history-container" style="color:#64748b; font-size:0.9rem;">
+          No sessions recorded yet. Start a spelling bee session to see your progress!
+        </div>
+      </section>
+    </div>
+  </main>
+
+  
+  
+<script>
+// Scripps National Spelling Bee 2026-2027 Word Bank (200 Words)
+const DEFAULT_WORDS = [
+  {
+    "word": "sorceress",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A woman who practices magic or witchcraft.",
+    "sentence": "The sorceress cast a gentle spell to guide the travelers home."
+  },
+  {
+    "word": "suspension",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The temporary stopping of an activity or privilege, or a state of being hung.",
+    "sentence": "The Golden Gate Bridge is a famous suspension bridge."
+  },
+  {
+    "word": "convertible",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun / adj",
+    "def": "Able to be converted; especially a car with a roof that can be folded back.",
+    "sentence": "On sunny afternoons, they loved driving with the convertible top down."
+  },
+  {
+    "word": "collateral",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "Something pledged as security for repayment of a loan.",
+    "sentence": "The borrower offered real estate as collateral for the bank loan."
+  },
+  {
+    "word": "perimeter",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The continuous line forming the boundary of a closed geometric figure.",
+    "sentence": "She measured each side of the garden to calculate its total perimeter."
+  },
+  {
+    "word": "magnesium",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A light, silvery-white metallic element that burns with a brilliant white light.",
+    "sentence": "Magnesium is an essential mineral required for plant and human health."
+  },
+  {
+    "word": "hypothermia",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The condition of having an abnormally and dangerously low body temperature.",
+    "sentence": "The rescue team wrapped the lost hiker in blankets to treat hypothermia."
+  },
+  {
+    "word": "cosmodrome",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A site or base used for the launch of rockets and spacecraft.",
+    "sentence": "The rocket stood poised on the launchpad of the historic cosmodrome."
+  },
+  {
+    "word": "insurrection",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A violent uprising or rebellion against an authority or government.",
+    "sentence": "The soldiers quelled the insurrection before the capital was taken."
+  },
+  {
+    "word": "persnickety",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "adj",
+    "def": "Placing too much emphasis on trivial or minor details; fussy.",
+    "sentence": "The persnickety editor checked every punctuation mark twice."
+  },
+  {
+    "word": "predecessor",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A person who held a job or office before the current holder.",
+    "sentence": "The new principal paid tribute to the accomplishments of her predecessor."
+  },
+  {
+    "word": "duende",
+    "grade": 6,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A heightened state of emotion, passion, or charismatic soul in flamenco and art.",
+    "sentence": "The guitarist played with such intense duende that the audience was captivated."
+  },
+  {
+    "word": "carrion",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The decaying flesh of dead animals.",
+    "sentence": "Vultures circled in the sky searching the plains for carrion."
+  },
+  {
+    "word": "arnica",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A plant of the daisy family used in herbal remedies for soothing bruises.",
+    "sentence": "She applied an arnica ointment to her sprained ankle to reduce swelling."
+  },
+  {
+    "word": "iridium",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A hard, dense, corrosion-resistant silvery-yellow chemical element.",
+    "sentence": "A thin layer of iridium around the globe suggests an asteroid impact."
+  },
+  {
+    "word": "staccato",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "adj / adv",
+    "def": "Performed with each note sharply detached or separated from the others.",
+    "sentence": "Raindrops hit the metal roof with a rapid, staccato beat."
+  },
+  {
+    "word": "dachshund",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A breed of dog with a long body, very short legs, and drooping ears.",
+    "sentence": "The energetic dachshund scampered across the lawn chasing a red ball."
+  },
+  {
+    "word": "glamorous",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Attractive, exciting, and full of charming elegance.",
+    "sentence": "She wore a glamorous gown to the annual film gala."
+  },
+  {
+    "word": "singularity",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The state or quality of being singular, unique, or a point of infinite density.",
+    "sentence": "Astrophysicists study the gravitational singularity at the center of a black hole."
+  },
+  {
+    "word": "snarkiness",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The quality of being sharply sarcastic, snide, or irritable.",
+    "sentence": "His playful snarkiness amused his friends, but annoyed his teachers."
+  },
+  {
+    "word": "initiation",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The act of admitting someone into a group, society, or new phase.",
+    "sentence": "The ceremony marked their official initiation into the honor society."
+  },
+  {
+    "word": "precedent",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "An earlier event or judicial decision that serves as an example or rule.",
+    "sentence": "The Supreme Court's ruling established an important legal precedent."
+  },
+  {
+    "word": "meticulous",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Showing great attention to detail; very careful and precise.",
+    "sentence": "The jeweler was meticulous when setting the delicate diamonds."
+  },
+  {
+    "word": "optometrist",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "An eye doctor qualified to examine eyes and prescribe corrective lenses.",
+    "sentence": "She visited the optometrist to get a new prescription for glasses."
+  },
+  {
+    "word": "arthritis",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "Painful inflammation and stiffness of the joints.",
+    "sentence": "Regular gentle swimming helped relieve the stiffness caused by arthritis."
+  },
+  {
+    "word": "regolith",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The layer of unconsolidated rocky material covering bedrock, as on the Moon.",
+    "sentence": "The Apollo astronauts kicked up clouds of fine lunar regolith as they walked."
+  },
+  {
+    "word": "fascism",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A political philosophy characterized by dictatorial power and strict social control.",
+    "sentence": "The historian lectured on the rise of fascism in twentieth-century Europe."
+  },
+  {
+    "word": "Senegal",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun (proper)",
+    "def": "A country located on the coast of West Africa, whose capital is Dakar.",
+    "sentence": "The artist traveled to Senegal to explore its rich musical traditions."
+  },
+  {
+    "word": "conscious",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Aware of and responding to one's surroundings; awake and alert.",
+    "sentence": "He remained fully conscious and calm despite the sudden power outage."
+  },
+  {
+    "word": "matrilineal",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "adj",
+    "def": "Based on or tracing kinship through the maternal or mother's line.",
+    "sentence": "In several traditional societies, family property passes through a matrilineal system."
+  },
+  {
+    "word": "elliptical",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Having the shape of an ellipse; oval.",
+    "sentence": "Planets travel around the sun in elliptical orbits."
+  },
+  {
+    "word": "adrenaline",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A hormone produced in response to stress, fear, or exciting physical exertion.",
+    "sentence": "A sudden rush of adrenaline helped the runner sprint across the finish line."
+  },
+  {
+    "word": "rendezvous",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A meeting at an agreed time and place.",
+    "sentence": "The explorers set a secret rendezvous point near the fountain."
+  },
+  {
+    "word": "Aeolus",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun (proper)",
+    "def": "In Greek mythology, the divine ruler and keeper of the winds.",
+    "sentence": "In the Odyssey, Aeolus gifted Odysseus a bag containing the fierce winds."
+  },
+  {
+    "word": "salamanders",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun (plural)",
+    "def": "Amphibians resembling lizards, with moist skin and a long tail.",
+    "sentence": "We found two spotted salamanders hiding under the damp rotting log."
+  },
+  {
+    "word": "fictitious",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Not real or true; invented or fabricated in fiction.",
+    "sentence": "Sherlock Holmes is one of literature's most famous fictitious detectives."
+  },
+  {
+    "word": "battalion",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A large military unit consisting of several companies.",
+    "sentence": "The commander ordered the infantry battalion to secure the ridge."
+  },
+  {
+    "word": "mascara",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A cosmetic for darkening, lengthening, or thickening the eyelashes.",
+    "sentence": "She applied a light coat of waterproof mascara before the performance."
+  },
+  {
+    "word": "materialize",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "verb",
+    "alternatives": [
+      "materialise"
+    ],
+    "def": "To become actual fact; or to appear unexpectedly as if from nowhere.",
+    "sentence": "A friendly cat seemed to materialize out of the evening mist."
+  },
+  {
+    "word": "haddock",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A silvery-gray edible marine fish of the cod family.",
+    "sentence": "The coastal diner served delicious crispy haddock with french fries."
+  },
+  {
+    "word": "megahertz",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A unit of frequency equal to one million hertz.",
+    "sentence": "The FM radio station broadcasts its audio at 101.5 megahertz."
+  },
+  {
+    "word": "schnauzer",
+    "grade": 6,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A German breed of dog with a bristly beard and wiry coat.",
+    "sentence": "Their miniature schnauzer greeted every guest with enthusiastic barking."
+  },
+  {
+    "word": "pentathletes",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Athletes who compete in a pentathlon consisting of five different events.",
+    "sentence": "The Olympic pentathletes trained relentlessly in fencing, swimming, and running."
+  },
+  {
+    "word": "pheasants",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Long-tailed game birds known for the bright plumage of the males.",
+    "sentence": "Two colorful ring-necked pheasants burst from the tall prairie grass."
+  },
+  {
+    "word": "reservoir",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A large natural or artificial lake used as a source of water supply.",
+    "sentence": "Spring mountain rains filled the municipal water reservoir to capacity."
+  },
+  {
+    "word": "Polaroid",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun (trademark)",
+    "def": "A type of instant camera or the photograph produced by it.",
+    "sentence": "She tucked a vintage Polaroid photo of her grandparents into her journal."
+  },
+  {
+    "word": "piteously",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "adv",
+    "def": "In a manner evoking pity, compassion, or sorrow.",
+    "sentence": "The lost puppy whimpered piteously on the rainy doorstep."
+  },
+  {
+    "word": "glaucoma",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "An eye condition characterized by increased fluid pressure leading to optic nerve damage.",
+    "sentence": "Routine eye exams can detect glaucoma early to protect vision."
+  },
+  {
+    "word": "cemetery",
+    "grade": 6,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A burial ground or graveyard.",
+    "sentence": "Historic oak trees shaded the oldest monuments in the quiet cemetery."
+  },
+  {
+    "word": "romerillo",
+    "grade": 6,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A flowering herbaceous plant or shrub found in tropical and subtropical regions.",
+    "sentence": "Herbalists in the Caribbean traditionally steep romerillo leaves into a soothing tea."
+  },
+  {
+    "word": "newt",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A small, slender-bodied amphibian with a moist tail.",
+    "sentence": "A bright orange eft, the juvenile stage of an eastern newt, crawled across the moss."
+  },
+  {
+    "word": "lapels",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "The two folded parts on either side of the front of a coat or jacket below the collar.",
+    "sentence": "He wore a small enamel American flag pin on the lapels of his suit jacket."
+  },
+  {
+    "word": "mortar",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A mixture of sand, water, and cement used in building to bind stones or bricks.",
+    "sentence": "The skilled mason smoothed wet mortar between the brick rows."
+  },
+  {
+    "word": "imperial",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Relating to an empire, emperor, or supreme imperial authority.",
+    "sentence": "The visitors admired the grand architecture of the imperial palace."
+  },
+  {
+    "word": "mewling",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "verb / adj",
+    "def": "Whimpering or crying plaintively like a child or kitten.",
+    "sentence": "The tiny stray kitten was heard mewling softly behind the wooden shed."
+  },
+  {
+    "word": "authority",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The power or right to give orders, make decisions, and enforce obedience.",
+    "sentence": "The park ranger had the legal authority to close trails during wildfires."
+  },
+  {
+    "word": "lemmings",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Small, short-tailed Arctic rodents known for dramatic population fluctuations.",
+    "sentence": "During peak years, Arctic lemmings forage actively beneath the winter snow."
+  },
+  {
+    "word": "inanimate",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Not alive, lacking physical life; motionless.",
+    "sentence": "Rocks, minerals, and wooden chairs are familiar examples of inanimate objects."
+  },
+  {
+    "word": "appetizing",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Appealing to the appetite; invitingly delicious in appearance or aroma.",
+    "sentence": "Freshly baked cinnamon rolls gave off an appetizing, sweet fragrance."
+  },
+  {
+    "word": "self-sufficient",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Needing no outside help in satisfying one's basic needs; independent.",
+    "sentence": "Their solar-powered homestead was completely self-sufficient for energy and food."
+  },
+  {
+    "word": "tenuous",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Very weak, slight, or fragile; insubstantial.",
+    "sentence": "The climber maintained a tenuous grip on the icy granite ledge."
+  },
+  {
+    "word": "procession",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A number of people or vehicles moving forward in an orderly formal manner.",
+    "sentence": "A musical brass band led the celebratory parade procession down Main Street."
+  },
+  {
+    "word": "hemisphere",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A half of a sphere; especially half of the Earth.",
+    "sentence": "Australia is situated in the Southern Hemisphere."
+  },
+  {
+    "word": "torrential",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Falling rapidly and in copious, torrential quantities.",
+    "sentence": "A torrential downpour quickly filled the street gutters with rushing water."
+  },
+  {
+    "word": "cuisine",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A style or method of cooking, especially characteristic of a particular country.",
+    "sentence": "Italian cuisine is internationally celebrated for fresh herbs and handmade pasta."
+  },
+  {
+    "word": "modish",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Conforming to or following what is currently popular and fashionable.",
+    "sentence": "The boutique displayed modish autumn jackets and stylish leather boots."
+  },
+  {
+    "word": "settee",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A long upholstered seat with a back and arms, for two or more people.",
+    "sentence": "Grandmother enjoyed reading mystery novels while seated on the velvet settee."
+  },
+  {
+    "word": "thrummed",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "verb",
+    "def": "Made a continuous rhythmic humming or vibrating sound.",
+    "sentence": "The ship's diesel engines thrummed deep within the ocean liner's hull."
+  },
+  {
+    "word": "generosity",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The quality of being kind, unselfish, and generous.",
+    "sentence": "The neighborhood benefited immensely from her generosity toward the local pantry."
+  },
+  {
+    "word": "unrelenting",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Not yielding in strength, severity, or determination; relentless.",
+    "sentence": "The marathon runner pushed through the unrelenting heat and wind."
+  },
+  {
+    "word": "persistent",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Continuing firmly or obstinately in a course of action despite difficulty.",
+    "sentence": "Her persistent study habits earned her top honors in science class."
+  },
+  {
+    "word": "generator",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A dynamo or mechanical apparatus for converting mechanical energy into electricity.",
+    "sentence": "The hospital switched on its backup generator when the storm knocked out power."
+  },
+  {
+    "word": "panoramic",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "With a wide and unbroken view of an extensive surrounding area.",
+    "sentence": "From the mountain peak, hikers enjoyed a panoramic view of the alpine valley."
+  },
+  {
+    "word": "decisively",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adv",
+    "def": "In a manner that shows the ability to make quick decisions firmly and clearly.",
+    "sentence": "The soccer captain acted decisively to score the game-winning goal."
+  },
+  {
+    "word": "frequency",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "The rate at which something occurs or is repeated over a particular period.",
+    "sentence": "The frequency of afternoon thunderstorms increased as summer peaked."
+  },
+  {
+    "word": "sentinels",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun (plural)",
+    "def": "Soldiers or guards whose job is to stand watch and keep look-out.",
+    "sentence": "Two stone sentinels stood guard at the ancient castle gates."
+  },
+  {
+    "word": "prospective",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Expected or likely to happen in the future; potential.",
+    "sentence": "Campus tour guides welcomed prospective students and their parents."
+  },
+  {
+    "word": "conspicuous",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Standing out so as to be clearly and easily visible.",
+    "sentence": "The bright yellow canary was conspicuous among the dark evergreen branches."
+  },
+  {
+    "word": "saxophone",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A brass musical wind instrument with a reed mouthpiece.",
+    "sentence": "He played a soulful jazz melody on his tenor saxophone."
+  },
+  {
+    "word": "seminal",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Strongly influencing later developments; groundbreaking and foundational.",
+    "sentence": "Albert Einstein published several seminal physics papers in 1905."
+  },
+  {
+    "word": "reluctance",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "Unwillingness or hesitation to do something.",
+    "sentence": "Despite his initial reluctance, he quickly came to love learning Spanish."
+  },
+  {
+    "word": "sauntered",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "verb",
+    "def": "Walked in a slow, relaxed, leisurely manner; strolled.",
+    "sentence": "The cheerful tourists sauntered leisurely through the botanical gardens."
+  },
+  {
+    "word": "influenza",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A contagious viral infection of the respiratory passages causing fever and aches.",
+    "sentence": "Annual vaccinations help protect communities against seasonal influenza."
+  },
+  {
+    "word": "unconscious",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Not awake, aware, or responsive; knocked out or insensible.",
+    "sentence": "The boxer remained unconscious for a few seconds before sitting up."
+  },
+  {
+    "word": "embankment",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A stone or earthen wall or mound built to hold back water or support a road.",
+    "sentence": "Workers fortified the river embankment to prevent seasonal flooding."
+  },
+  {
+    "word": "burnished",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "adj / verb",
+    "def": "Polished until smooth and glowing with a bright luster.",
+    "sentence": "The antique brass candlestick had a beautiful burnished shine."
+  },
+  {
+    "word": "wallowing",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "verb",
+    "def": "Rolling about or lying relaxed in mud, water, or dust.",
+    "sentence": "Water buffalo spent the hot midday hours wallowing in cool mud pools."
+  },
+  {
+    "word": "arsonists",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun (plural)",
+    "def": "People who deliberately and criminally set fire to property.",
+    "sentence": "Detectives gathered evidence to apprehend the reckless arsonists."
+  },
+  {
+    "word": "dominion",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "Sovereignty or supreme control over a territory or people.",
+    "sentence": "The historic kingdom held vast dominion across the northern seas."
+  },
+  {
+    "word": "Doberman",
+    "grade": 7,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A sleek, muscular German breed of dog with black and tan markings.",
+    "sentence": "Their loyal Doberman guarded the property with alert vigilance."
+  },
+  {
+    "word": "gauntlets",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun (plural)",
+    "def": "Armored or protective gloves covering the hands and wrists.",
+    "sentence": "The knight fastened heavy steel gauntlets over his leather riding gloves."
+  },
+  {
+    "word": "auditory",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Relating to the sense of hearing.",
+    "sentence": "Listening to birdsong stimulates the brain's complex auditory processing centers."
+  },
+  {
+    "word": "blithely",
+    "grade": 7,
+    "difficulty": "unmarked",
+    "pos": "adv",
+    "def": "In a way that shows a casual and cheerful indifference.",
+    "sentence": "The carefree hiker walked blithely past warning signs along the steep path."
+  },
+  {
+    "word": "subscription",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "An advance payment made to receive regular issues of a magazine or service.",
+    "sentence": "She renewed her annual subscription to the national science journal."
+  },
+  {
+    "word": "preconception",
+    "grade": 7,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "An idea or opinion formed beforehand, often without factual basis.",
+    "sentence": "Meeting people from other cultures helped challenge his old preconceptions."
+  },
+  {
+    "word": "perpendicular",
+    "grade": 7,
+    "difficulty": "hard",
+    "pos": "adj",
+    "def": "At an angle of 90 degrees to a given line, plane, or surface; vertical.",
+    "sentence": "The flagpole stood exactly perpendicular to the level concrete courtyard."
+  },
+  {
+    "word": "canter",
+    "grade": 7,
+    "difficulty": "unmarked",
+    "pos": "noun / verb",
+    "def": "A three-beat horse gait faster than a trot but slower than a gallop.",
+    "sentence": "The equestrian guided her bay horse into a smooth, graceful canter."
+  },
+  {
+    "word": "consulate",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The premises or office officially occupied by a consul in a foreign city.",
+    "sentence": "Travelers who lost their passports visited the embassy consulate for assistance."
+  },
+  {
+    "word": "propeller",
+    "grade": 7,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A mechanical device with rotating blades that drives an aircraft or ship.",
+    "sentence": "The airplane propeller spun rapidly into an invisible blur at takeoff."
+  },
+  {
+    "word": "juniper",
+    "grade": 7,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "An evergreen shrub or small tree with prickly needle-like leaves and aromatic berries.",
+    "sentence": "A sweet, piney scent rose from the crushed blue juniper berries."
+  },
+  {
+    "word": "odorant",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "alternatives": [
+      "odourant"
+    ],
+    "def": "A substance that gives off a distinct smell, especially one added to gas for safety.",
+    "sentence": "Utility companies add a pungent odorant to natural gas so leaks can be detected."
+  },
+  {
+    "word": "crocheted",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "verb / adj",
+    "def": "Made with crochet by looping yarn or thread using a hooked needle.",
+    "sentence": "Grandma crocheted a cozy pastel blanket for the new baby."
+  },
+  {
+    "word": "apologetic",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Expressing or showing regretful acknowledgment of an offense or fault.",
+    "sentence": "He gave an apologetic smile after accidentally bumping into the shelf."
+  },
+  {
+    "word": "Delaware",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun (proper)",
+    "def": "A Mid-Atlantic U.S. state, nicknamed 'The First State'.",
+    "sentence": "Delaware was the very first state to ratify the United States Constitution."
+  },
+  {
+    "word": "undulating",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj / verb",
+    "def": "Moving with a smooth wave-like motion; gently rolling hills.",
+    "sentence": "Green wheat fields looked like a peaceful undulating sea in the breeze."
+  },
+  {
+    "word": "brazier",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "alternatives": [
+      "brasier"
+    ],
+    "def": "A portable metal container designed to hold burning coals or charcoal for heating.",
+    "sentence": "The campers gathered around the iron brazier to stay warm in the autumn night."
+  },
+  {
+    "word": "phantasmal",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Relating to or resembling a ghost, phantom, or unreal illusion.",
+    "sentence": "A phantasmal white mist hovered silently over the desolate moor."
+  },
+  {
+    "word": "arachnid",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "An eight-legged invertebrate animal, including spiders, scorpions, and ticks.",
+    "sentence": "A garden spider is a harmless arachnid that feeds on garden pests."
+  },
+  {
+    "word": "affinities",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Natural likings or sympathy for someone, or close resemblances/connections.",
+    "sentence": "Because of her affinities with animals, she decided to study veterinary medicine."
+  },
+  {
+    "word": "embodiment",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A tangible or visible representation of an idea, quality, or feeling.",
+    "sentence": "The champion was celebrated as the living embodiment of sportsmanship."
+  },
+  {
+    "word": "porpoises",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Small, toothed marine cetaceans related to dolphins, typically with blunt snouts.",
+    "sentence": "A lively pod of harbor porpoises leaped rhythmically beside the ferry boat."
+  },
+  {
+    "word": "psychological",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Relating to the mental and emotional state of a person.",
+    "sentence": "The doctor evaluated both the physical and psychological well-being of the patient."
+  },
+  {
+    "word": "assemblage",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A collection or gathering of things or people.",
+    "sentence": "A diverse assemblage of scientists gathered in the lecture hall."
+  },
+  {
+    "word": "leprosy",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A chronic infectious disease caused by Mycobacterium leprae; Hansen's disease.",
+    "sentence": "Modern antibiotics have made leprosy completely curable around the world."
+  },
+  {
+    "word": "eureka",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "interjection",
+    "def": "A cry of joy or satisfaction when one finds or discovers something.",
+    "sentence": "'Eureka!' shouted the inventor when the experiment finally succeeded."
+  },
+  {
+    "word": "annelids",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Segmented worms comprising earthworms, lugworms, and leeches.",
+    "sentence": "Earthworms are beneficial annelids that enrich and aerate garden soils."
+  },
+  {
+    "word": "palazzo",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A palatial building or grand residence, especially in Italy.",
+    "sentence": "The gondola drifted past a centuries-old Venetian palazzo along the Grand Canal."
+  },
+  {
+    "word": "irrelevant",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Not connected with or relevant to something; beside the point.",
+    "sentence": "The judge ruled that the hearsay testimony was completely irrelevant to the case."
+  },
+  {
+    "word": "diplomatically",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adv",
+    "def": "In a tactful and sensitive manner dealing with people.",
+    "sentence": "She diplomatically deflected the sensitive question with a warm, polite smile."
+  },
+  {
+    "word": "calibrate",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "verb",
+    "def": "To mark units of measurement or adjust an instrument for accurate readings.",
+    "sentence": "The technician had to calibrate the electronic scale before weighing chemicals."
+  },
+  {
+    "word": "credenza",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A sideboard or cupboard, especially one without legs, used for dining or offices.",
+    "sentence": "She organized reference books neatly atop the polished walnut credenza."
+  },
+  {
+    "word": "phenomenon",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A remarkable or observed event, fact, or circumstance.",
+    "sentence": "The aurora borealis is an extraordinary natural light phenomenon."
+  },
+  {
+    "word": "alleviate",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "verb",
+    "def": "To make suffering, deficiency, or a problem less severe; ease.",
+    "sentence": "Applying an ice pack helped alleviate the pain from her twisted knee."
+  },
+  {
+    "word": "legation",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A diplomatic minister and their staff, or the official headquarters of such a mission.",
+    "sentence": "The foreign diplomats gathered at the American legation for emergency talks."
+  },
+  {
+    "word": "diffidence",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "Modesty or shyness resulting from a lack of self-confidence.",
+    "sentence": "Overcoming her initial diffidence, she stepped up to the microphone and sang."
+  },
+  {
+    "word": "butane",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A flammable hydrocarbon gas of the alkane series, stored under pressure as fuel.",
+    "sentence": "The portable camping stove was fueled by a small blue cylinder of butane."
+  },
+  {
+    "word": "cataract",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A clouding of the eye lens leading to decreased vision, or a large waterfall.",
+    "sentence": "The surgeon performed a routine outpatient procedure to remove her cataract."
+  },
+  {
+    "word": "quiche",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A savory open pastry crust filled with baked eggs, cream, cheese, and vegetables.",
+    "sentence": "They ordered warm spinach quiche and fresh fruit salad for Sunday brunch."
+  },
+  {
+    "word": "euphemism",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A mild or indirect expression substituted for one considered harsh or blunt.",
+    "sentence": "'Passing away' is a gentle euphemism frequently used for the word 'dying'."
+  },
+  {
+    "word": "acolyte",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A person assisting a priest in a religious service; or a devoted assistant.",
+    "sentence": "The young acolyte carried the ceremonial candle during the cathedral procession."
+  },
+  {
+    "word": "innocuous",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Not harmful or offensive; harmless.",
+    "sentence": "The question seemed innocent and innocuous, but it uncovered a big secret."
+  },
+  {
+    "word": "Tripoli",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (proper)",
+    "def": "The capital and largest city of Libya in North Africa.",
+    "sentence": "Tripoli is an ancient port city situated along the coast of the Mediterranean."
+  },
+  {
+    "word": "neurological",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Relating to the anatomy, functions, and organic disorders of the nervous system.",
+    "sentence": "The hospital opened a state-of-the-art neurological research wing."
+  },
+  {
+    "word": "mysticetes",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (plural)",
+    "def": "Baleen whales, belonging to the suborder Mysticeti, possessing baleen plates.",
+    "sentence": "Blue whales and humpbacks are mysticetes that filter tiny krill from seawater."
+  },
+  {
+    "word": "finesse",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "Intricate, delicate, and refined skill in action or negotiation.",
+    "sentence": "The diplomat handled the delicate peace treaty with remarkable finesse."
+  },
+  {
+    "word": "curriculum",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The subjects comprising a course of study in a school or college.",
+    "sentence": "The middle school updated its science curriculum to include robotics."
+  },
+  {
+    "word": "enigmatic",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Difficult to interpret or understand; mysterious.",
+    "sentence": "The Mona Lisa is famous worldwide for her subtly enigmatic smile."
+  },
+  {
+    "word": "hypothesis",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A proposed explanation made as a starting point for further investigation.",
+    "sentence": "Before conducting the experiment, each student wrote down a clear hypothesis."
+  },
+  {
+    "word": "comprehensible",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Able to be understood; intelligible.",
+    "sentence": "The professor made complex quantum physics easily comprehensible to beginners."
+  },
+  {
+    "word": "trenchant",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "adj",
+    "def": "Vigorous or incisive in expression or style; sharp and penetrating.",
+    "sentence": "Her trenchant essay analyzed the environmental consequences of deforestation."
+  },
+  {
+    "word": "despondent",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "adj",
+    "def": "In low spirits from loss of hope or courage; dejected.",
+    "sentence": "He felt despondent after losing the tournament, but vowed to practice harder."
+  },
+  {
+    "word": "echolocation",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "The location of objects by reflected sound, used especially by bats and dolphins.",
+    "sentence": "Bats use ultrasonic echolocation to pinpoint nocturnal insects in complete darkness."
+  },
+  {
+    "word": "conflagration",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "An extensive, destructive fire that destroys a great deal of land or property.",
+    "sentence": "Firefighters battled courageously through the night to halt the advancing conflagration."
+  },
+  {
+    "word": "thermotaxis",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "The movement of an organism or cell along a temperature gradient.",
+    "sentence": "Nematode worms exhibit positive thermotaxis toward their optimal cultivation temperature."
+  },
+  {
+    "word": "inaugurate",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "verb",
+    "def": "To admit someone formally to office, or begin an enterprise with a ceremony.",
+    "sentence": "The city will inaugurate the new mayor during a formal ceremony in January."
+  },
+  {
+    "word": "bioluminescence",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "The emission of light by a living organism, such as a firefly or deep-sea fish.",
+    "sentence": "Waves crashing onto the beach sparkled with the blue bioluminescence of plankton."
+  },
+  {
+    "word": "chickadee",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A small North American bird with a dark cap and throat and lively call.",
+    "sentence": "A black-capped chickadee landed fearlessly on the snowy bird feeder."
+  },
+  {
+    "word": "asymmetric",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj",
+    "def": "Having two sides or halves that are not the same; lacking symmetry.",
+    "sentence": "The modern building features an striking asymmetric roofline."
+  },
+  {
+    "word": "shar-pei",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A Chinese breed of dog characterized by deep wrinkles and a blue-black tongue.",
+    "sentence": "The wrinkled folds of the shar-pei puppy gave it an endearing expression."
+  },
+  {
+    "word": "endothermy",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The physiological capacity to maintain a warm body temperature internally.",
+    "sentence": "Endothermy allows birds and mammals to stay active even in freezing Arctic winters."
+  },
+  {
+    "word": "éclair",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "alternatives": [
+      "eclair"
+    ],
+    "def": "An oblong pastry made with choux dough filled with cream and topped with chocolate.",
+    "sentence": "She savored a fresh French chocolate éclair at the local bakery."
+  },
+  {
+    "word": "irascibility",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The tendency to be easily angered; irritability or hot-temper.",
+    "sentence": "His irascibility flared up whenever his morning train was delayed."
+  },
+  {
+    "word": "foliage",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "The leaves of a plant or trees collectively.",
+    "sentence": "Tourists flock to Vermont every autumn to admire the vibrant orange foliage."
+  },
+  {
+    "word": "quizzically",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adv",
+    "def": "In a questioning, puzzled, or amused manner.",
+    "sentence": "The puppy tilted its head quizzically when it heard the strange whistling sound."
+  },
+  {
+    "word": "increments",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Small regular increases or additions on a fixed scale.",
+    "sentence": "The trainer increased the weight in five-pound increments each week."
+  },
+  {
+    "word": "reassurance",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "The action of removing someone's doubts and fears, or a comforting statement.",
+    "sentence": "Her mother's gentle reassurance made her feel confident before the spelling bee."
+  },
+  {
+    "word": "protectorate",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A state that is controlled and protected by another sovereign nation.",
+    "sentence": "The island territory functioned as a British protectorate during the nineteenth century."
+  },
+  {
+    "word": "pulmonary",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "adj",
+    "def": "Relating to the lungs.",
+    "sentence": "The pulmonary artery transports deoxygenated blood directly to the lungs."
+  },
+  {
+    "word": "approximation",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A value or estimate that is nearly but not exactly correct.",
+    "sentence": "Three point one four is a helpful decimal approximation of the number pi."
+  },
+  {
+    "word": "censers",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun (plural)",
+    "def": "Vessels in which incense is burned, especially in religious services.",
+    "sentence": "Gold censers swung gently on chains, releasing fragrant incense into the air."
+  },
+  {
+    "word": "pathologically",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adv",
+    "def": "In a manner caused by or relating to a physical or mental disease; abnormally.",
+    "sentence": "He was pathologically incapable of admitting that he had made a mistake."
+  },
+  {
+    "word": "glycerin",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "alternatives": [
+      "glycerine"
+    ],
+    "def": "A sweet, colorless, thick liquid used in cosmetics, soaps, and medicines.",
+    "sentence": "Glycerin soap is known for being extra moisturizing on sensitive skin."
+  },
+  {
+    "word": "alabaster",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun / adj",
+    "def": "A fine-grained, translucent, typically white gypsum or calcite used for carving.",
+    "sentence": "Ancient Egyptian artisans carved exquisite vases from pure white alabaster."
+  },
+  {
+    "word": "arugula",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A Mediterranean plant with pungent, peppery leaves eaten in salads.",
+    "sentence": "She tossed spicy arugula leaves with shaved parmesan and olive oil."
+  },
+  {
+    "word": "vibrometer",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "An instrument designed to measure vibrations of machinery or structures.",
+    "sentence": "The aerospace engineer used a laser vibrometer to inspect turbine flutter."
+  },
+  {
+    "word": "mayonnaise",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A thick, creamy dressing made of egg yolks, oil, and vinegar or lemon juice.",
+    "sentence": "He spread a dollop of creamy mayonnaise onto the turkey sandwich."
+  },
+  {
+    "word": "sputum",
+    "grade": 8,
+    "difficulty": "unmarked",
+    "pos": "noun",
+    "def": "A mixture of saliva and mucus coughed up from the respiratory tract.",
+    "sentence": "The laboratory analyzed a sputum sample to check for bacterial infection."
+  },
+  {
+    "word": "cerulean",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj / noun",
+    "def": "Deep sky-blue or azure in color.",
+    "sentence": "The tropical waters shone with a brilliant, crystal-clear cerulean shade."
+  },
+  {
+    "word": "cul-de-sac",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A street or passage closed at one end; a dead-end street.",
+    "sentence": "Children were riding bicycles safely at the end of the quiet cul-de-sac."
+  },
+  {
+    "word": "kerosene",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "alternatives": [
+      "kerosine"
+    ],
+    "def": "A light fuel oil obtained by distilling petroleum, used in lamps and jet engines.",
+    "sentence": "The vintage lantern glowed warmly with kerosene fuel."
+  },
+  {
+    "word": "Pennsylvania",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun (proper)",
+    "def": "An eastern U.S. state, nicknamed 'The Keystone State'.",
+    "sentence": "The Declaration of Independence was signed in Philadelphia, Pennsylvania."
+  },
+  {
+    "word": "ampulla",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A globular dilated part of a canal or duct, as in the inner ear or fallopian tube.",
+    "sentence": "Sensory hair cells in the ampulla of the semicircular canal detect head rotation."
+  },
+  {
+    "word": "sensilla",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (plural)",
+    "def": "Simple sensory receptors on insects consisting of a modified spine or pore.",
+    "sentence": "Tiny sensilla on insect antennae detect minute chemical odors in the breeze."
+  },
+  {
+    "word": "eponymous",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "adj",
+    "def": "Giving one's name to a book, place, or institution, or named after someone.",
+    "sentence": "The Beatles released their eponymous double album, commonly known as The White Album."
+  },
+  {
+    "word": "Presbyterian",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj / noun",
+    "def": "Relating to a Reformed Protestant denomination governed by elders.",
+    "sentence": "The historic stone Presbyterian church sat facing the central village green."
+  },
+  {
+    "word": "Sierra Leone",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (proper)",
+    "def": "A coastal country located in West Africa, whose capital is Freetown.",
+    "sentence": "Freetown is the lively coastal capital and largest port of Sierra Leone."
+  },
+  {
+    "word": "Eritrea",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (proper)",
+    "def": "A northeast African country situated on the Red Sea coast.",
+    "sentence": "Asmara is the high-elevation, architecturally striking capital of Eritrea."
+  },
+  {
+    "word": "forsythia",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "An ornamental deciduous shrub producing bright yellow flowers in early spring.",
+    "sentence": "Golden blooms on the forsythia bush were the first cheerful sign of spring."
+  },
+  {
+    "word": "salicylic acid",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "A crystalline organic carboxylic acid used in skincare and aspirin synthesis.",
+    "sentence": "Dermatologists often recommend salicylic acid cleansers to unclog pores."
+  },
+  {
+    "word": "stomatopods",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (plural)",
+    "def": "Marine crustaceans of the order Stomatopoda, including mantis shrimps.",
+    "sentence": "Stomatopods possess powerful predatory claws that can strike with blinding speed."
+  },
+  {
+    "word": "frankincense",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "An aromatic gum resin from Arabian trees, burned as incense and used in perfumes.",
+    "sentence": "Ancient trading caravans transported precious frankincense across the desert routes."
+  },
+  {
+    "word": "solenodon",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A nocturnal, venomous, insectivorous mammal found in Cuba and Hispaniola.",
+    "sentence": "The rare Hispaniolan solenodon is one of the world's few venomous mammals."
+  },
+  {
+    "word": "lactobacillus",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "A genus of rod-shaped, beneficial bacteria that produce lactic acid.",
+    "sentence": "Lactobacillus cultures are active ingredients in the fermentation of traditional yogurt."
+  },
+  {
+    "word": "vibrissae",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (plural)",
+    "def": "Stiff tactile hairs or whiskers growing around the nostrils or eyes of animals.",
+    "sentence": "The cat's sensitive vibrissae helped it navigate through narrow spaces in the dark."
+  },
+  {
+    "word": "a cappella",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "adj / adv",
+    "alternatives": [
+      "acappella"
+    ],
+    "def": "Choral or vocal music sung without any instrumental accompaniment.",
+    "sentence": "The university choir performed a stunning a cappella arrangement of the folk song."
+  },
+  {
+    "word": "Amharic",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (proper)",
+    "def": "A Semitic language that is the official working language of Ethiopia.",
+    "sentence": "Amharic is written using a unique writing system known as the Ge'ez script."
+  },
+  {
+    "word": "Gloucester",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (proper)",
+    "def": "A historic cathedral city in England, or a famous fishing port city in Massachusetts.",
+    "sentence": "Gloucester, Massachusetts is renowned as one of America's oldest seaport communities."
+  },
+  {
+    "word": "prosciutto",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun",
+    "def": "Italian dry-cured ham that is usually thinly sliced and served uncooked.",
+    "sentence": "Slices of savory prosciutto were wrapped around sweet, chilled melon wedges."
+  },
+  {
+    "word": "chitinous",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Formed or made of chitin, the tough substance forming arthropod exoskeletons.",
+    "sentence": "The beetle was protected by a durable, hard chitinous outer shell."
+  },
+  {
+    "word": "trichobothria",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (plural)",
+    "def": "Elongate sensory setae found on arachnids that detect subtle air currents.",
+    "sentence": "Delicate trichobothria on the scorpion's pedipalps alert it to approaching prey."
+  },
+  {
+    "word": "Cappadocia",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (proper)",
+    "def": "A historical region in central Turkey famous for distinctive 'fairy chimney' rock formations.",
+    "sentence": "Hundreds of colorful hot-air balloons float over the canyons of Cappadocia at sunrise."
+  },
+  {
+    "word": "Bildungsroman",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "alternatives": [
+      "bildungsroman"
+    ],
+    "def": "A novel dealing with one person's formative years or moral/spiritual growth; a coming-of-age story.",
+    "sentence": "To Kill a Mockingbird is often studied as a classic example of a Bildungsroman."
+  },
+  {
+    "word": "electrolytes",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun (plural)",
+    "def": "Minerals in body fluids that carry an electric charge and maintain fluid balance.",
+    "sentence": "Drinking sports beverages with electrolytes helps rehydrate athletes after vigorous workouts."
+  },
+  {
+    "word": "ototoxic",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "adj",
+    "def": "Having a toxic or damaging effect on the ear or its nerve supply.",
+    "sentence": "Doctors carefully monitored the dosage because the medication could be ototoxic."
+  },
+  {
+    "word": "Aphrodite",
+    "grade": 8,
+    "difficulty": "easy",
+    "pos": "noun (proper)",
+    "def": "The ancient Greek goddess of love, beauty, passion, and procreation.",
+    "sentence": "In Greek legend, Aphrodite arose from the sea foam near the island of Cyprus."
+  },
+  {
+    "word": "bogong moth",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "An Australian noctuid moth that undertakes extensive long-distance annual migrations.",
+    "sentence": "Millions of bogong moths migrate to the cool Australian Alps during hot summers."
+  },
+  {
+    "word": "yakuza",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun",
+    "def": "A Japanese organized crime syndicate, or a member of such a syndicate.",
+    "sentence": "The detective thriller focused on international investigations into the yakuza."
+  },
+  {
+    "word": "Krio",
+    "grade": 8,
+    "difficulty": "middle",
+    "pos": "noun (proper)",
+    "def": "An English-based creole language spoken throughout Sierra Leone.",
+    "sentence": "Krio serves as the widespread lingua franca among diverse communities across Sierra Leone."
+  },
+  {
+    "word": "Addis Ababa",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun (proper)",
+    "def": "The highland capital city and largest urban center of Ethiopia.",
+    "sentence": "Addis Ababa serves as the diplomatic headquarters of the African Union."
+  },
+  {
+    "word": "spes phthisica",
+    "grade": 8,
+    "difficulty": "hard",
+    "pos": "noun",
+    "def": "An unrealistic, euphoric state of optimism often observed in patients with pulmonary tuberculosis.",
+    "sentence": "Historical physicians documented spes phthisica in poets who remained cheerful despite chronic illness."
+  }
+];
+
+</script>
+<script>
+// ==========================================
+// BeeSpeller Champion - Main Application Logic
+// ==========================================
+
+let wordsBank = [];
+let activeQuizList = [];
+let currentIndex = 0;
+let currentScore = 0;
+let currentSpelledLetters = "";
+let baseSpelledLetters = "";
+let lastCommittedResultIndex = -1;
+let shouldKeepListening = false;
+let currentSessionResults = [];
+let speechRecognizer = null;
+let isRecording = false;
+let selectedVoice = null;
+let customDifficulties = {};
+
+// Quiz Configuration State
+let configWordCount = 5;
+let configDifficulty = 'all';
+let configGrade = 'all';
+
+// Audio Context for Chimes (Web Audio API)
+let audioCtx = null;
+
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioContextClass) {
+      audioCtx = new AudioContextClass();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+// Play celebratory or error sound effect
+function playChime(isSuccess) {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+    if (isSuccess) {
+      // Cheerful major chord arpeggio
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+      osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+      osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+      osc.start(now);
+      osc.stop(now + 0.7);
+    } else {
+      // Gentle soft low error tone
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.35);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    }
+  } catch (e) {
+    console.warn("Audio chime error:", e);
+  }
+}
+
+// ==========================================
+// Initialization & Voice Setup
+// ==========================================
+document.addEventListener("DOMContentLoaded", async () => {
+  loadCustomDifficulties();
+  await ensureWordsLoaded();
+  setupVoices();
+  setupSpeechRecognition();
+  loadStats();
+  loadAudioOnlyPreference();
+
+  // Keyboard navigation
+  window.addEventListener('keydown', handleGlobalKeydown);
+});
+
+async function ensureWordsLoaded() {
+  if (typeof DEFAULT_WORDS !== 'undefined' && Array.isArray(DEFAULT_WORDS) && DEFAULT_WORDS.length > 0) {
+    initializeWordsBank();
+    updateSetupCounts();
+    renderWordBank();
+    return;
+  }
+
+  // Fallback 1: Fetch words.json directly from server
+  try {
+    const res = await fetch('words.json');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        window.DEFAULT_WORDS = data;
+        initializeWordsBank();
+        updateSetupCounts();
+        renderWordBank();
+        return;
+      }
+    }
+  } catch (e) {
+    console.warn("Could not fetch words.json fallback:", e);
+  }
+
+  // Fallback 2: Polling retry every 100ms up to 30 times (3 seconds)
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+    if (typeof DEFAULT_WORDS !== 'undefined' && Array.isArray(DEFAULT_WORDS) && DEFAULT_WORDS.length > 0) {
+      clearInterval(interval);
+      initializeWordsBank();
+      updateSetupCounts();
+      renderWordBank();
+    } else if (attempts > 30) {
+      clearInterval(interval);
+      console.error("Failed to load spelling bee words bank after 30 attempts.");
+    }
+  }, 100);
+}
+
+function loadAudioOnlyPreference() {
+  try {
+    const stored = localStorage.getItem('bee_audio_only_clues');
+    if (stored !== null) {
+      toggleAudioOnlyPreference(stored === 'true');
+    }
+  } catch (e) {}
+}
+
+function loadCustomDifficulties() {
+  try {
+    const stored = localStorage.getItem('bee_custom_difficulties');
+    if (stored) {
+      customDifficulties = JSON.parse(stored);
+    }
+  } catch (e) {
+    customDifficulties = {};
+  }
+}
+
+function saveCustomDifficulty(word, newDiff) {
+  customDifficulties[word] = newDiff;
+  try {
+    localStorage.setItem('bee_custom_difficulties', JSON.stringify(customDifficulties));
+  } catch (e) {}
+  // Update words bank in memory
+  const found = wordsBank.find(w => w.word.toLowerCase() === word.toLowerCase());
+  if (found) {
+    found.difficulty = newDiff;
+  }
+  updateSetupCounts();
+}
+
+function initializeWordsBank() {
+  const base = (typeof DEFAULT_WORDS !== 'undefined' && Array.isArray(DEFAULT_WORDS)) ? DEFAULT_WORDS : [];
+  wordsBank = base.map(item => {
+    const custom = customDifficulties[item.word];
+    return {
+      ...item,
+      difficulty: custom || item.difficulty || 'unmarked'
+    };
+  });
+}
+
+function updateSetupCounts() {
+  const allCount = wordsBank.length;
+  const easyCount = wordsBank.filter(w => w.difficulty === 'easy').length;
+  const midCount = wordsBank.filter(w => w.difficulty === 'middle').length;
+  const hardCount = wordsBank.filter(w => w.difficulty === 'hard').length;
+
+  const countAllEl = document.getElementById('count-all');
+  const countEasyEl = document.getElementById('count-easy');
+  const countMiddleEl = document.getElementById('count-middle');
+  const countHardEl = document.getElementById('count-hard');
+
+  if (countAllEl) countAllEl.innerText = `${allCount} words`;
+  if (countEasyEl) countEasyEl.innerText = `${easyCount} words`;
+  if (countMiddleEl) countMiddleEl.innerText = `${midCount} words`;
+  if (countHardEl) countHardEl.innerText = `${hardCount} words`;
+
+  // Update available pool note
+  updatePoolAvailableNote();
+}
+
+function updatePoolAvailableNote() {
+  const pool = getFilteredPool();
+  const el = document.getElementById('pool-available-note');
+  if (el) {
+    el.innerText = `${pool.length} available in chosen filter`;
+  }
+}
+
+// ==========================================
+// Speech Synthesis & Neural Accent Voices
+// ==========================================
+const NEURAL_VOICE_OPTIONS = [
+  { key: 'neural:au-male', name: '🇦🇺 Australian Male (William - Neural)', preview: "G'day! Welcome to the BeeSpeller Champion spelling bee.", default: true },
+  { key: 'neural:au-female', name: '🇦🇺 Australian Female (Natasha - Neural)', preview: "Hello! Welcome to the BeeSpeller Champion spelling bee." },
+  { key: 'neural:in-female', name: '🇮🇳 Indian Female (Neerja - Neural)', preview: "Namaste! Welcome to the BeeSpeller Champion spelling bee." },
+  { key: 'neural:in-male', name: '🇮🇳 Indian Male (Prabhat - Neural)', preview: "Namaste! Welcome to the BeeSpeller Champion spelling bee." },
+  { key: 'neural:gb-male', name: '🇬🇧 British Male (Ryan - Neural)', preview: "Good day! Welcome to the BeeSpeller Champion spelling bee." },
+  { key: 'neural:gb-female', name: '🇬🇧 British Female (Sonia - Neural)', preview: "Good day! Welcome to the BeeSpeller Champion spelling bee." },
+  { key: 'neural:us-female', name: '🇺🇸 US Female (Jenny - Neural)', preview: "Hello! Welcome to the BeeSpeller Champion spelling bee." },
+  { key: 'neural:us-male', name: '🇺🇸 US Male (Guy - Neural)', preview: "Hello! Welcome to the BeeSpeller Champion spelling bee." }
+];
+
+let selectedVoiceKey = 'neural:au-male';
+let selectedNativeVoice = null;
+let activeAudio = null;
+
+function loadSelectedVoicePreference() {
+  try {
+    const saved = localStorage.getItem('bee_selected_voice');
+    if (saved) {
+      selectedVoiceKey = saved;
+    } else {
+      selectedVoiceKey = 'neural:au-male';
+    }
+  } catch (e) {
+    selectedVoiceKey = 'neural:au-male';
+  }
+}
+
+function saveSelectedVoicePreference(key) {
+  selectedVoiceKey = key;
+  try {
+    localStorage.setItem('bee_selected_voice', key);
+  } catch (e) {}
+}
+
+function setupVoices() {
+  loadSelectedVoicePreference();
+
+  function populateVoiceDropdowns() {
+    const selects = [
+      document.getElementById('voice-select'),
+      document.getElementById('quiz-voice-select')
+    ].filter(Boolean);
+
+    if (selects.length === 0) return;
+
+    selects.forEach(select => {
+      select.innerHTML = '';
+
+      // 1. Neural Voices Group
+      const neuralGroup = document.createElement('optgroup');
+      neuralGroup.label = '✨ High-Quality Neural Voices (Accents)';
+      NEURAL_VOICE_OPTIONS.forEach(opt => {
+        const optionEl = document.createElement('option');
+        optionEl.value = opt.key;
+        optionEl.textContent = opt.name + (opt.default ? ' [Default]' : '');
+        neuralGroup.appendChild(optionEl);
+      });
+      select.appendChild(neuralGroup);
+
+      // 2. Browser Native Voices Group (if supported)
+      if ('speechSynthesis' in window) {
+        const nativeVoices = window.speechSynthesis.getVoices();
+        const engVoices = nativeVoices.filter(v => v.lang.startsWith('en'));
+        const listToUse = engVoices.length ? engVoices : nativeVoices;
+
+        if (listToUse.length > 0) {
+          const nativeGroup = document.createElement('optgroup');
+          nativeGroup.label = '🌐 Browser System Voices';
+          listToUse.forEach(v => {
+            const optionEl = document.createElement('option');
+            optionEl.value = `native:${v.name}`;
+            optionEl.textContent = `${v.name} (${v.lang})`;
+            nativeGroup.appendChild(optionEl);
+          });
+          select.appendChild(nativeGroup);
+        }
+      }
+
+      // Restore selected value
+      select.value = selectedVoiceKey;
+      if (!select.value && select.options.length > 0) {
+        select.value = 'neural:au-male';
+        selectedVoiceKey = 'neural:au-male';
+      }
+    });
+
+    updateSelectedNativeVoice();
+  }
+
+  populateVoiceDropdowns();
+
+  if ('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = populateVoiceDropdowns;
+  }
+
+  // Listeners on both setup and quiz selects to keep them synchronized
+  ['voice-select', 'quiz-voice-select'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', (e) => {
+        const newKey = e.target.value;
+        saveSelectedVoicePreference(newKey);
+        updateSelectedNativeVoice();
+
+        // Sync other select
+        ['voice-select', 'quiz-voice-select'].forEach(otherId => {
+          const otherEl = document.getElementById(otherId);
+          if (otherEl && otherEl !== el) {
+            otherEl.value = newKey;
+          }
+        });
+      });
+    }
+  });
+}
+
+function updateSelectedNativeVoice() {
+  if (selectedVoiceKey.startsWith('native:') && 'speechSynthesis' in window) {
+    const voiceName = selectedVoiceKey.replace('native:', '');
+    const voices = window.speechSynthesis.getVoices();
+    selectedNativeVoice = voices.find(v => v.name === voiceName) || null;
+  } else {
+    selectedNativeVoice = null;
+  }
+}
+
+// Stop any currently playing audio or speech synthesis immediately
+function stopCurrentSpeech() {
+  if (activeAudio) {
+    try {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+    } catch (e) {}
+    activeAudio = null;
+  }
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {}
+  }
+}
+
+function speakText(text, rate = 0.9, onEndCallback = null) {
+  if (!text) return;
+  stopCurrentSpeech();
+
+  // If using Neural Server Voice
+  if (selectedVoiceKey.startsWith('neural:')) {
+    const voiceCode = selectedVoiceKey.replace('neural:', '');
+    const url = `/api/tts?voice=${encodeURIComponent(voiceCode)}&text=${encodeURIComponent(text)}&rate=${rate}`;
+    const audio = new Audio(url);
+    activeAudio = audio;
+
+    audio.onended = () => {
+      activeAudio = null;
+      if (onEndCallback) onEndCallback();
+    };
+
+    audio.onerror = (err) => {
+      console.warn("Neural audio playback failed, falling back to Web Speech API:", err);
+      activeAudio = null;
+      speakWithWebSpeech(text, rate, onEndCallback);
+    };
+
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(err => {
+        console.warn("Audio play() interrupted or blocked:", err);
+        // Fallback if audio policy blocked
+        speakWithWebSpeech(text, rate, onEndCallback);
+      });
+    }
+  } else {
+    // Native browser voice
+    speakWithWebSpeech(text, rate, onEndCallback);
+  }
+}
+
+function findBestNativeVoiceForAccent(accentKey) {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices || voices.length === 0) return null;
+
+  let targetLang = 'en-US';
+  if (accentKey.includes('au-')) targetLang = 'en-AU';
+  else if (accentKey.includes('in-')) targetLang = 'en-IN';
+  else if (accentKey.includes('gb-')) targetLang = 'en-GB';
+
+  // 1. Language code match (e.g. en-AU on Chromebook/ChromeOS)
+  let match = voices.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(targetLang.toLowerCase()));
+  if (match) return match;
+
+  // 2. Name contains accent keyword
+  if (accentKey.includes('au-')) {
+    match = voices.find(v => /australi/i.test(v.name));
+    if (match) return match;
+  } else if (accentKey.includes('in-')) {
+    match = voices.find(v => /india/i.test(v.name));
+    if (match) return match;
+  } else if (accentKey.includes('gb-')) {
+    match = voices.find(v => /uk|united kingdom/i.test(v.name));
+    if (match) return match;
+  }
+
+  // 3. Fallback to any English voice
+  return voices.find(v => v.lang.startsWith('en')) || voices[0];
+}
+
+function speakWithWebSpeech(text, rate = 0.9, onEndCallback = null) {
+  if (!('speechSynthesis' in window)) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  if (selectedNativeVoice) {
+    utterance.voice = selectedNativeVoice;
+  } else {
+    // If a neural key was chosen (or on static GitHub Pages), match best native accent
+    const bestVoice = findBestNativeVoiceForAccent(selectedVoiceKey);
+    if (bestVoice) {
+      utterance.voice = bestVoice;
+    }
+  }
+  utterance.rate = rate;
+  utterance.pitch = 1.0;
+  if (onEndCallback) {
+    utterance.onend = onEndCallback;
+  }
+  window.speechSynthesis.speak(utterance);
+}
+
+// Preview button test speech
+function testCurrentVoice() {
+  const current = NEURAL_VOICE_OPTIONS.find(o => o.key === selectedVoiceKey);
+  const sample = current ? current.preview : "Hello! Welcome to the BeeSpeller Champion spelling bee.";
+  speakText(sample, 0.9);
+}
+
+// Speak the word letter-by-letter slowly
+function speakLetterByLetter(word, callback) {
+  stopCurrentSpeech();
+
+  const cleanLetters = word.toUpperCase().split('').map(ch => {
+    if (ch === ' ') return 'space';
+    if (ch === '-') return 'hyphen';
+    return ch;
+  });
+
+  if (selectedVoiceKey.startsWith('neural:')) {
+    // Neural voices benefit from punctuated pauses between letters
+    const spelled = cleanLetters.join('... ');
+    const fullText = `Incorrect. The correct spelling is: ${spelled}... ${word}.`;
+    speakText(fullText, 0.75, callback);
+  } else {
+    const spelledText = cleanLetters.join(',  ');
+    const fullText = `Incorrect. The correct spelling is: ${spelledText}.  ${word}.`;
+    speakWithWebSpeech(fullText, 0.65, callback);
+  }
+}
+
+// ==========================================
+// Speech Recognition (Microphone Voice Spelling)
+// ==========================================
+function setupSpeechRecognition() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    console.warn("Speech Recognition API not supported in this browser.");
+    const micLabel = document.getElementById('mic-status-label');
+    if (micLabel) {
+      micLabel.innerText = "Voice recognition not supported in this browser. Use keyboard below!";
+    }
+    return;
+  }
+
+  speechRecognizer = new SpeechRec();
+  speechRecognizer.continuous = true;
+  speechRecognizer.interimResults = true;
+  speechRecognizer.lang = 'en-US';
+
+  speechRecognizer.onstart = () => {
+    isRecording = true;
+    lastCommittedResultIndex = -1;
+    updateMicUI(true);
+  };
+
+  speechRecognizer.onend = () => {
+    isRecording = false;
+    // If user hasn't explicitly stopped mic or submitted, keep listening so pauses between letters don't stop recognition
+    if (shouldKeepListening) {
+      lastCommittedResultIndex = -1;
+      try {
+        speechRecognizer.start();
+        return;
+      } catch (e) {
+        setTimeout(() => {
+          if (shouldKeepListening) {
+            try { speechRecognizer.start(); } catch (err) {}
+          }
+        }, 200);
+      }
+    }
+    updateMicUI(false);
+  };
+
+  speechRecognizer.onerror = (event) => {
+    console.warn("Speech recognition error:", event.error);
+    if (event.error === 'no-speech' && shouldKeepListening) {
+      // Natural pause between letters, onend will automatically re-listen
+      return;
+    }
+    isRecording = false;
+    updateMicUI(false);
+  };
+
+  speechRecognizer.onresult = (event) => {
+    let newFinalTranscript = '';
+    let interimTranscript = '';
+
+    for (let i = 0; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        if (i > lastCommittedResultIndex) {
+          newFinalTranscript += event.results[i][0].transcript + ' ';
+          lastCommittedResultIndex = i;
+        }
+      } else {
+        interimTranscript += event.results[i][0].transcript + ' ';
+      }
+    }
+
+    if (newFinalTranscript.trim()) {
+      const finalLetters = parseTranscriptToLetters(newFinalTranscript);
+      if (finalLetters) {
+        baseSpelledLetters += finalLetters;
+      }
+    }
+
+    const interimLetters = interimTranscript.trim() ? parseTranscriptToLetters(interimTranscript) : '';
+    currentSpelledLetters = (baseSpelledLetters + interimLetters).toLowerCase();
+    renderLetterBoxes();
+  };
+}
+
+// Dictionary mapping spoken letter names, homophones, and phonetic names to actual letters
+const PHONETIC_LETTER_MAP = {
+  'a': 'a', 'ay': 'a', 'aye': 'a', 'hey': 'a',
+  'b': 'b', 'bee': 'b', 'be': 'b',
+  'c': 'c', 'see': 'c', 'sea': 'c', 'si': 'c', 'cee': 'c',
+  'd': 'd', 'dee': 'd',
+  'e': 'e', 'ee': 'e',
+  'f': 'f', 'ef': 'f', 'eff': 'f',
+  'g': 'g', 'gee': 'g', 'jee': 'g',
+  'h': 'h', 'aitch': 'h', 'ach': 'h', 'hate': 'h', 'eight': 'h',
+  'i': 'i', 'eye': 'i', 'aye': 'i', 'ai': 'i',
+  'j': 'j', 'jay': 'j',
+  'k': 'k', 'kay': 'k', 'ok': 'k',
+  'l': 'l', 'el': 'l', 'ell': 'l',
+  'm': 'm', 'em': 'm',
+  'n': 'n', 'en': 'n', 'an': 'n', 'and': 'n', 'in': 'n',
+  'o': 'o', 'oh': 'o',
+  'p': 'p', 'pee': 'p', 'pea': 'p',
+  'q': 'q', 'cue': 'q', 'queue': 'q',
+  'r': 'r', 'are': 'r', 'ar': 'r', 'our': 'r',
+  's': 's', 'es': 's', 'ess': 's', 'yes': 's',
+  't': 't', 'tee': 't', 'tea': 't',
+  'u': 'u', 'you': 'u', 'yu': 'u',
+  'v': 'v', 'vee': 'v', 'we': 'v',
+  'w': 'w', 'double u': 'w', 'double-u': 'w', 'doubleyou': 'w',
+  'x': 'x', 'ex': 'x', 'axe': 'x',
+  'y': 'y', 'why': 'y', 'wye': 'y',
+  'z': 'z', 'zee': 'z', 'zed': 'z',
+  'space': ' ', 'hyphen': '-', 'dash': '-', 'apostrophe': "'"
+};
+
+function parseTranscriptToLetters(transcript) {
+  if (!transcript) return '';
+  let clean = transcript.toLowerCase().trim();
+
+  // Normalize punctuation dots/commas
+  clean = clean.replace(/[.,!?]/g, ' ');
+
+  // Hyphenated letters e.g. "s-c-h"
+  if (clean.includes('-')) {
+    const parts = clean.split('-').map(s => s.trim()).filter(Boolean);
+    if (parts.length > 1) {
+      return parts.map(p => PHONETIC_LETTER_MAP[p] || (p.length === 1 ? p : '')).join('');
+    }
+  }
+
+  const tokens = clean.split(/\s+/).filter(Boolean);
+  let result = '';
+
+  for (let i = 0; i < tokens.length; i++) {
+    const raw = tokens[i].replace(/[^a-z\-']/g, '');
+    if (!raw) continue;
+
+    // Check two-word letter names like "double u"
+    if (i < tokens.length - 1) {
+      const nextRaw = tokens[i + 1].replace(/[^a-z\-']/g, '');
+      const twoWord = `${raw} ${nextRaw}`;
+      if (PHONETIC_LETTER_MAP[twoWord]) {
+        result += PHONETIC_LETTER_MAP[twoWord];
+        i++;
+        continue;
+      }
+    }
+
+    if (PHONETIC_LETTER_MAP[raw]) {
+      result += PHONETIC_LETTER_MAP[raw];
+    } else if (raw.length === 1 && /[a-z]/i.test(raw)) {
+      result += raw;
+    } else {
+      // If the engine transcribed the full word matching the target word
+      const targetWord = activeQuizList[currentIndex]?.word.toLowerCase() || '';
+      const cleanTarget = targetWord.replace(/[^a-z]/g, '');
+      if (raw === cleanTarget && baseSpelledLetters === '') {
+        return cleanTarget;
+      }
+      // Otherwise split characters
+      for (const char of raw) {
+        result += char;
+      }
+    }
+  }
+
+  return result;
+}
+
+function toggleMicRecording() {
+  if (!speechRecognizer) {
+    alert("Speech recognition is not supported in this browser. Please use the keyboard input!");
+    return;
+  }
+
+  if (isRecording) {
+    shouldKeepListening = false;
+    speechRecognizer.stop();
+  } else {
+    shouldKeepListening = true;
+    lastCommittedResultIndex = -1;
+    try {
+      speechRecognizer.start();
+    } catch (e) {
+      console.warn("Recognition start failed or already active:", e);
+    }
+  }
+}
+
+function updateMicUI(recording) {
+  const btn = document.getElementById('mic-btn');
+  const label = document.getElementById('mic-status-label');
+  const wave = document.getElementById('listening-wave');
+  const container = document.getElementById('letter-display');
+
+  if (btn) {
+    if (recording) {
+      btn.classList.add('recording');
+      btn.innerHTML = '🛑';
+    } else {
+      btn.classList.remove('recording');
+      btn.innerHTML = '🎤';
+    }
+  }
+
+  if (label) {
+    label.innerText = recording ? "Listening... Spell clearly now!" : "Click to Spell into Microphone";
+    label.style.color = recording ? "#ef4444" : "#334155";
+  }
+
+  if (wave) {
+    wave.style.display = recording ? "flex" : "none";
+  }
+
+  if (container) {
+    if (recording) {
+      container.classList.add('active-listening');
+    } else {
+      container.classList.remove('active-listening');
+    }
+  }
+}
+
+// Render letter blocks on screen
+function renderLetterBoxes() {
+  const container = document.getElementById('letter-display');
+  if (!container) return;
+
+  if (!currentSpelledLetters || currentSpelledLetters.length === 0) {
+    container.innerHTML = '<span class="letter-placeholder">Press the microphone below and spell the word letter by letter</span>';
+    return;
+  }
+
+  container.innerHTML = '';
+  for (let i = 0; i < currentSpelledLetters.length; i++) {
+    const char = currentSpelledLetters[i];
+    const box = document.createElement('div');
+    if (char === ' ') {
+      box.className = 'letter-box space';
+      box.innerHTML = '&nbsp;';
+    } else {
+      box.className = 'letter-box';
+      box.textContent = char.toUpperCase();
+    }
+    container.appendChild(box);
+  }
+
+  // Also sync manual input box if open
+  const manualInput = document.getElementById('manual-spelling-input');
+  if (manualInput) {
+    manualInput.value = currentSpelledLetters;
+  }
+}
+
+function handleBackspaceLetter() {
+  if (baseSpelledLetters.length > 0) {
+    baseSpelledLetters = baseSpelledLetters.slice(0, -1);
+  }
+  currentSpelledLetters = baseSpelledLetters;
+  renderLetterBoxes();
+}
+
+function clearLetters() {
+  baseSpelledLetters = "";
+  currentSpelledLetters = "";
+  lastCommittedResultIndex = -1;
+  renderLetterBoxes();
+}
+
+function toggleManualInput() {
+  const box = document.getElementById('manual-input-container');
+  if (!box) return;
+  const isHidden = box.style.display === 'none' || !box.style.display;
+  box.style.display = isHidden ? 'flex' : 'none';
+  if (isHidden) {
+    const input = document.getElementById('manual-spelling-input');
+    input.value = currentSpelledLetters;
+    input.focus();
+  }
+}
+
+function applyManualInput() {
+  const input = document.getElementById('manual-spelling-input');
+  if (input) {
+    baseSpelledLetters = input.value.trim().toLowerCase();
+    currentSpelledLetters = baseSpelledLetters;
+    renderLetterBoxes();
+  }
+}
+
+function handleManualInputKey(event) {
+  if (event.key === 'Enter') {
+    applyManualInput();
+    gradeCurrentSpelling();
+  }
+}
+
+// ==========================================
+// Quiz Flow & Session Logic
+// ==========================================
+function setWordCount(count) {
+  configWordCount = count;
+  document.querySelectorAll('.word-count-selector .pill-option[data-count]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.count === String(count));
+  });
+  const customInput = document.getElementById('custom-count-input');
+  if (customInput && count !== 'custom') {
+    customInput.value = '';
+  }
+}
+
+function setCustomWordCount(val) {
+  const num = parseInt(val, 10);
+  if (!isNaN(num) && num > 0) {
+    configWordCount = num;
+    document.querySelectorAll('.word-count-selector .pill-option[data-count]').forEach(btn => {
+      btn.classList.remove('active');
+    });
+  }
+}
+
+function setDifficultyFilter(diff) {
+  configDifficulty = diff;
+  document.querySelectorAll('.diff-filter-card').forEach(card => {
+    card.classList.toggle('active', card.classList.contains(`diff-${diff}`));
+  });
+  updatePoolAvailableNote();
+}
+
+function setGradeFilter(grade) {
+  configGrade = grade;
+  document.querySelectorAll('.word-count-selector .pill-option[data-grade]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.grade === String(grade));
+  });
+  updatePoolAvailableNote();
+}
+
+function getFilteredPool() {
+  return wordsBank.filter(w => {
+    // Difficulty match
+    if (configDifficulty !== 'all' && w.difficulty !== configDifficulty) {
+      return false;
+    }
+    // Grade match
+    if (configGrade !== 'all' && String(w.grade) !== String(configGrade)) {
+      return false;
+    }
+    return true;
+  });
+}
+
+function shuffleArray(array) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function startQuizSession(customList = null) {
+  if (customList && customList.length > 0) {
+    activeQuizList = shuffleArray(customList);
+  } else {
+    const pool = getFilteredPool();
+    if (pool.length === 0) {
+      alert("No words match the selected filters! Please select another difficulty or grade.");
+      return;
+    }
+
+    const shuffled = shuffleArray(pool);
+    const count = (configWordCount === 'all') ? shuffled.length : Math.min(Number(configWordCount) || 10, shuffled.length);
+    activeQuizList = shuffled.slice(0, count);
+  }
+
+  currentIndex = 0;
+  currentScore = 0;
+  currentSessionResults = [];
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+
+  loadCurrentWord();
+}
+
+function loadCurrentWord() {
+  if (currentIndex >= activeQuizList.length) {
+    finishQuizSession();
+    return;
+  }
+
+  const currentItem = activeQuizList[currentIndex];
+  shouldKeepListening = false;
+  if (isRecording && speechRecognizer) {
+    speechRecognizer.stop();
+  }
+  baseSpelledLetters = "";
+  currentSpelledLetters = "";
+  lastCommittedResultIndex = -1;
+  renderLetterBoxes();
+
+  // Reset clues & feedback
+  const clueBox = document.getElementById('clue-box');
+  clueBox.style.display = 'none';
+  clueBox.innerHTML = '';
+
+  const feedbackBanner = document.getElementById('feedback-banner');
+  feedbackBanner.style.display = 'none';
+
+  // Update Progress & Score
+  const total = activeQuizList.length;
+  document.getElementById('progress-indicator').innerText = `Word ${currentIndex + 1} of ${total}`;
+  const pct = total > 0 ? Math.round(((currentIndex) / total) * 100) : 0;
+  document.getElementById('quiz-progress-bar').style.width = `${pct}%`;
+  document.getElementById('current-score-badge').innerText = `Score: ${currentScore} / ${currentIndex} (${currentIndex > 0 ? Math.round((currentScore / currentIndex) * 100) : 0}%)`;
+
+  // Badges
+  const diffBadge = document.getElementById('badge-difficulty');
+  diffBadge.className = `badge badge-${currentItem.difficulty}`;
+  const diffIcons = { easy: '🌸 Easy (Pink)', middle: '🌊 Middle (Blue)', hard: '🍇 Hard (Purple)', unmarked: '⚪ Unmarked' };
+  diffBadge.innerText = diffIcons[currentItem.difficulty] || currentItem.difficulty;
+
+  document.getElementById('badge-grade').innerText = `Grade ${currentItem.grade}`;
+  document.getElementById('badge-pos').innerText = currentItem.pos || 'noun';
+
+  // Read word out automatically after short pause
+  setTimeout(() => {
+    pronounceCurrentWord();
+  }, 400);
+}
+
+function pronounceCurrentWord() {
+  const currentItem = activeQuizList[currentIndex];
+  if (!currentItem) return;
+  speakText(`Your word is: ${currentItem.word}`, 0.9);
+}
+
+function speakCurrentWordSlowly() {
+  const currentItem = activeQuizList[currentIndex];
+  if (!currentItem) return;
+  speakText(currentItem.word, 0.65);
+}
+
+// Mask target word and its variants/inflections in clue text so the spelling is never revealed
+function maskWordInText(text, word, alternatives = []) {
+  if (!text || !word) return text || '';
+
+  const wordsToMask = [word, ...(alternatives || [])];
+  let masked = text;
+
+  wordsToMask.forEach(w => {
+    if (!w) return;
+    const cleanWord = w.trim();
+    // Escape regex special chars
+    const escaped = cleanWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    // Match word boundaries and common English suffixes (plurals, verb endings)
+    const regex = new RegExp(`\\b${escaped}(?:s|es|ed|ing|d|ly|al)?\\b`, 'gi');
+    masked = masked.replace(regex, '<span class="blanked-word">________</span>');
+
+    // For multi-word terms (e.g. 'salicylic acid', 'a cappella', 'bogong moth')
+    if (cleanWord.includes(' ') || cleanWord.includes('-')) {
+      const parts = cleanWord.split(/[\s-]+/).filter(p => p.length >= 3);
+      parts.forEach(p => {
+        const pEsc = p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pRegex = new RegExp(`\\b${pEsc}(?:s|es|ed|ing|d)?\\b`, 'gi');
+        masked = masked.replace(pRegex, '<span class="blanked-word">________</span>');
+      });
+    }
+  });
+
+  return masked;
+}
+
+let audioOnlyClues = false;
+
+function toggleAudioOnlyPreference(val) {
+  audioOnlyClues = val;
+  try {
+    localStorage.setItem('bee_audio_only_clues', val ? 'true' : 'false');
+  } catch (e) {}
+
+  // Sync checkboxes across UI
+  const quizCb = document.getElementById('audio-only-toggle');
+  const setupCb = document.getElementById('setup-audio-only-toggle');
+  if (quizCb) quizCb.checked = val;
+  if (setupCb) setupCb.checked = val;
+}
+
+function revealClueText() {
+  const rev = document.getElementById('revealed-clue-content');
+  const btn = document.getElementById('reveal-clue-btn');
+  if (rev) rev.style.display = 'block';
+  if (btn) btn.style.display = 'none';
+}
+
+function toggleClue(type) {
+  const currentItem = activeQuizList[currentIndex];
+  if (!currentItem) return;
+
+  const box = document.getElementById('clue-box');
+  box.style.display = 'block';
+
+  const maskedDef = maskWordInText(currentItem.def, currentItem.word, currentItem.alternatives);
+  const maskedSentence = maskWordInText(currentItem.sentence, currentItem.word, currentItem.alternatives);
+
+  if (type === 'definition') {
+    speakText(`Definition: ${currentItem.def}`);
+    if (audioOnlyClues) {
+      box.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>🔊 <em>Definition read aloud (audio-only)</em></span>
+          <button id="reveal-clue-btn" class="btn btn-outline" style="padding:2px 8px; font-size:0.75rem;" onclick="revealClueText()">Show masked text</button>
+        </div>
+        <div id="revealed-clue-content" style="display:none; margin-top:8px; padding-top:6px; border-top:1px dashed #cbd5e1;">
+          <strong>Definition:</strong> ${maskedDef}
+        </div>
+      `;
+    } else {
+      box.innerHTML = `<strong>Definition:</strong> ${maskedDef}`;
+    }
+  } else if (type === 'sentence') {
+    speakText(`In a sentence: ${currentItem.sentence}`);
+    if (audioOnlyClues) {
+      box.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span>🔊 <em>Sentence read aloud (audio-only)</em></span>
+          <button id="reveal-clue-btn" class="btn btn-outline" style="padding:2px 8px; font-size:0.75rem;" onclick="revealClueText()">Show masked text</button>
+        </div>
+        <div id="revealed-clue-content" style="display:none; margin-top:8px; padding-top:6px; border-top:1px dashed #cbd5e1;">
+          <strong>Sentence:</strong> "${maskedSentence}"
+        </div>
+      `;
+    } else {
+      box.innerHTML = `<strong>Sentence:</strong> "${maskedSentence}"`;
+    }
+  }
+}
+
+// ==========================================
+// Grading
+// ==========================================
+function normalizeWord(str) {
+  if (!str) return '';
+  return str.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accents (e.g. éclair -> eclair)
+    .replace(/[^a-z]/g, ""); // strip hyphens, spaces for flexible checking
+}
+
+function gradeCurrentSpelling() {
+  shouldKeepListening = false;
+  if (isRecording && speechRecognizer) {
+    speechRecognizer.stop();
+  }
+
+  const currentItem = activeQuizList[currentIndex];
+  if (!currentItem) return;
+
+  const userRaw = (currentSpelledLetters || baseSpelledLetters).trim();
+  if (!userRaw) {
+    alert("Please say or type your spelling before submitting!");
+    return;
+  }
+
+  const userNormalized = normalizeWord(userRaw);
+  const targetNormalized = normalizeWord(currentItem.word);
+
+  // Check target and alternatives
+  let isCorrect = (userNormalized === targetNormalized);
+  if (!isCorrect && currentItem.alternatives) {
+    for (const alt of currentItem.alternatives) {
+      if (userNormalized === normalizeWord(alt)) {
+        isCorrect = true;
+        break;
+      }
+    }
+  }
+
+  if (isCorrect) {
+    currentScore++;
+  }
+
+  // Record in round results
+  currentSessionResults.push({
+    word: currentItem.word,
+    grade: currentItem.grade,
+    difficulty: currentItem.difficulty,
+    userSpelling: userRaw,
+    isCorrect: isCorrect,
+    alternatives: currentItem.alternatives || []
+  });
+
+  // Display feedback banner
+  showFeedbackBanner(isCorrect, currentItem, userRaw);
+}
+
+function showFeedbackBanner(isCorrect, item, userSpelling) {
+  const banner = document.getElementById('feedback-banner');
+  const title = document.getElementById('feedback-title');
+  const details = document.getElementById('feedback-details');
+  const speechAction = document.getElementById('feedback-speech-action');
+
+  banner.style.display = 'block';
+  banner.className = `feedback-box ${isCorrect ? 'correct' : 'incorrect'}`;
+
+  playChime(isCorrect);
+
+  if (isCorrect) {
+    title.innerHTML = `🎉 Correct! Outstanding Job!`;
+    details.innerHTML = `You spelled: <strong class="spelled-comparison">${userSpelling.toUpperCase()}</strong>`;
+    speechAction.innerHTML = '';
+    triggerConfetti();
+
+    // Congratulatory voice
+    speakText("Correct! That is right.", 1.0);
+  } else {
+    title.innerHTML = `❌ Not Quite!`;
+    details.innerHTML = `
+      <div>You spelled: <strong class="spelled-comparison">${userSpelling.toUpperCase()}</strong></div>
+      <div>Correct spelling: <strong class="spelled-comparison" style="color:#047857; background:#d1fae5;">${item.word.toUpperCase()}</strong></div>
+      ${item.alternatives && item.alternatives.length ? `<div style="font-size:0.8rem; margin-top:4px;">(Alternative accepted: ${item.alternatives.join(', ')})</div>` : ''}
+    `;
+
+    speechAction.innerHTML = `
+      <button class="btn btn-voice" onclick="speakLetterByLetter('${item.word}')">
+        🔊 Hear Correct Spelling Again
+      </button>
+    `;
+
+    // Read back correct spelling letter by letter
+    setTimeout(() => {
+      speakLetterByLetter(item.word);
+    }, 300);
+  }
+
+  // Focus next button
+  const nextBtn = document.getElementById('next-word-btn');
+  if (nextBtn) nextBtn.focus();
+}
+
+function proceedToNextWord() {
+  currentIndex++;
+  loadCurrentWord();
+}
+
+function confirmExitQuiz() {
+  if (confirm("Are you sure you want to exit this spelling session?")) {
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('setup-screen').style.display = 'block';
+  }
+}
+
+// ==========================================
+// Results & History
+// ==========================================
+function finishQuizSession() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+
+  const total = activeQuizList.length;
+  const pct = total > 0 ? Math.round((currentScore / total) * 100) : 0;
+
+  document.getElementById('final-score-percent').innerText = `${pct}%`;
+  document.getElementById('final-score-fraction').innerText = `${currentScore} / ${total} Correct`;
+
+  const icon = document.getElementById('results-icon');
+  const headline = document.getElementById('results-headline');
+  const subtext = document.getElementById('results-subtext');
+
+  if (pct === 100) {
+    icon.innerText = '🏆';
+    headline.innerText = 'Flawless Victory!';
+    subtext.innerText = 'You spelled every single word correctly! Incredible job!';
+    triggerConfetti();
+  } else if (pct >= 80) {
+    icon.innerText = '🌟';
+    headline.innerText = 'Fantastic Spelling!';
+    subtext.innerText = 'You mastered most of the words in this round!';
+    triggerConfetti();
+  } else {
+    icon.innerText = '💪';
+    headline.innerText = 'Great Effort!';
+    subtext.innerText = 'Practice makes permanent. Keep going and master the tricky ones!';
+  }
+
+  // Count missed
+  const missedWords = currentSessionResults.filter(r => !r.isCorrect);
+  document.getElementById('missed-count-span').innerText = missedWords.length;
+  document.getElementById('retry-missed-btn').style.display = missedWords.length > 0 ? 'inline-flex' : 'none';
+
+  // Table summary
+  const tableBody = document.getElementById('results-table-body');
+  tableBody.innerHTML = '';
+  currentSessionResults.forEach(res => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${res.word}</strong></td>
+      <td>Grade ${res.grade}</td>
+      <td><span class="badge badge-${res.difficulty}">${res.difficulty}</span></td>
+      <td style="font-family:monospace; font-weight:700;">${res.userSpelling.toUpperCase()}</td>
+      <td>${res.isCorrect ? '<span style="color:#10b981; font-weight:800;">✓ Correct</span>' : '<span style="color:#ef4444; font-weight:800;">✗ Missed</span>'}</td>
+      <td><button class="btn btn-outline" style="padding:0.25rem 0.5rem; font-size:0.75rem;" onclick="speakLetterByLetter('${res.word}')">🔊 Listen</button></td>
+    `;
+    tableBody.appendChild(tr);
+  });
+
+  // Save to statistics
+  saveSessionToStats(total, currentScore, pct);
+}
+
+function retryMissedWords() {
+  const missedItems = currentSessionResults.filter(r => !r.isCorrect);
+  if (missedItems.length === 0) return;
+
+  const retryList = missedItems.map(m => wordsBank.find(w => w.word.toLowerCase() === m.word.toLowerCase())).filter(Boolean);
+  startQuizSession(retryList);
+}
+
+function startNewSessionSetup() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+}
+
+function saveSessionToStats(total, score, pct) {
+  try {
+    const history = JSON.parse(localStorage.getItem('bee_session_history') || '[]');
+    history.unshift({
+      date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      total: total,
+      score: score,
+      pct: pct,
+      difficulty: configDifficulty,
+      grade: configGrade
+    });
+    // Keep last 30 sessions
+    localStorage.setItem('bee_session_history', JSON.stringify(history.slice(0, 30)));
+    loadStats();
+  } catch (e) {}
+}
+
+function loadStats() {
+  try {
+    const history = JSON.parse(localStorage.getItem('bee_session_history') || '[]');
+    const totalSessions = history.length;
+    let totalWords = 0;
+    let totalScore = 0;
+
+    history.forEach(h => {
+      totalWords += h.total || 0;
+      totalScore += h.score || 0;
+    });
+
+    const accuracy = totalWords > 0 ? Math.round((totalScore / totalWords) * 100) : 0;
+
+    const elSessions = document.getElementById('stat-total-tests');
+    const elWords = document.getElementById('stat-total-words');
+    const elAcc = document.getElementById('stat-accuracy');
+    const container = document.getElementById('history-container');
+
+    if (elSessions) elSessions.innerText = totalSessions;
+    if (elWords) elWords.innerText = totalWords;
+    if (elAcc) elAcc.innerText = `${accuracy}%`;
+
+    if (container && history.length > 0) {
+      container.innerHTML = `
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Words</th>
+              <th>Score</th>
+              <th>Accuracy</th>
+              <th>Filter</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${history.map(h => `
+              <tr>
+                <td>${h.date}</td>
+                <td>${h.total} words</td>
+                <td>${h.score} / ${h.total}</td>
+                <td><strong>${h.pct}%</strong></td>
+                <td>${h.difficulty} / Grade ${h.grade}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+  } catch (e) {}
+}
+
+// ==========================================
+// Word Bank Tab
+// ==========================================
+function renderWordBank() {
+  const grid = document.getElementById('word-card-grid');
+  if (!grid) return;
+
+  const searchQuery = (document.getElementById('bank-search')?.value || '').toLowerCase().trim();
+  const gradeFilter = document.getElementById('bank-grade-filter')?.value || 'all';
+  const diffFilter = document.getElementById('bank-diff-filter')?.value || 'all';
+
+  const filtered = wordsBank.filter(item => {
+    if (gradeFilter !== 'all' && String(item.grade) !== gradeFilter) return false;
+    if (diffFilter !== 'all' && item.difficulty !== diffFilter) return false;
+    if (searchQuery) {
+      const matchWord = item.word.toLowerCase().includes(searchQuery);
+      const matchDef = (item.def || '').toLowerCase().includes(searchQuery);
+      if (!matchWord && !matchDef) return false;
+    }
+    return true;
+  });
+
+  grid.innerHTML = '';
+  filtered.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'word-tile';
+    card.innerHTML = `
+      <div>
+        <div class="word-tile-header">
+          <div>
+            <div class="word-title">${item.word}</div>
+            <div style="font-size:0.75rem; color:#64748b; font-weight:600;">
+              Grade ${item.grade} • ${item.pos || 'noun'}
+            </div>
+          </div>
+          <button class="btn btn-outline" style="padding:0.35rem 0.6rem; font-size:0.85rem;" onclick="speakLetterByLetter('${item.word}')" title="Pronounce and spell">
+            🔊
+          </button>
+        </div>
+        <div class="word-tile-def">${item.def}</div>
+        <div style="font-size:0.75rem; font-style:italic; color:#64748b; margin-bottom:0.75rem;">"${item.sentence}"</div>
+      </div>
+      <div class="word-tile-footer">
+        <span class="badge badge-${item.difficulty}">${item.difficulty}</span>
+        <select class="difficulty-picker-select" onchange="saveCustomDifficulty('${item.word}', this.value); renderWordBank();">
+          <option value="easy" ${item.difficulty === 'easy' ? 'selected' : ''}>🌸 Easy (Pink)</option>
+          <option value="middle" ${item.difficulty === 'middle' ? 'selected' : ''}>🌊 Middle (Blue)</option>
+          <option value="hard" ${item.difficulty === 'hard' ? 'selected' : ''}>🍇 Hard (Purple)</option>
+          <option value="unmarked" ${item.difficulty === 'unmarked' ? 'selected' : ''}>⚪ Unmarked</option>
+        </select>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// Navigation Tabs
+function switchTab(tabId) {
+  document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tabId}`)?.classList.add('active');
+
+  document.getElementById('quiz-tab-content').style.display = (tabId === 'quiz') ? 'block' : 'none';
+  document.getElementById('bank-tab-content').style.display = (tabId === 'bank') ? 'block' : 'none';
+  document.getElementById('stats-tab-content').style.display = (tabId === 'stats') ? 'block' : 'none';
+
+  if (tabId === 'bank') renderWordBank();
+  if (tabId === 'stats') loadStats();
+}
+
+// Keyboard Shortcuts
+function handleGlobalKeydown(e) {
+  // If user is currently typing in an input box, let normal typing happen
+  if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+  const quizScreen = document.getElementById('quiz-screen');
+  if (quizScreen && quizScreen.style.display !== 'none') {
+    if (e.key === 'r' || e.key === 'R') {
+      pronounceCurrentWord();
+    } else if (e.key === ' ' && !e.target.closest('button')) {
+      e.preventDefault();
+      toggleMicRecording();
+    } else if (e.key === 'Enter') {
+      const feedbackBanner = document.getElementById('feedback-banner');
+      if (feedbackBanner && feedbackBanner.style.display !== 'none') {
+        proceedToNextWord();
+      } else {
+        gradeCurrentSpelling();
+      }
+    }
+  }
+}
+
+// ==========================================
+// Confetti Animation Effect
+// ==========================================
+function triggerConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const confettiPieces = [];
+  const colors = ['#f43f5e', '#0284c7', '#8b5cf6', '#f59e0b', '#10b981', '#fbbf24'];
+
+  for (let i = 0; i < 90; i++) {
+    confettiPieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.4,
+      w: Math.random() * 8 + 4,
+      h: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vy: Math.random() * 4 + 2,
+      vx: (Math.random() - 0.5) * 3,
+      rotation: Math.random() * 360,
+      vRot: (Math.random() - 0.5) * 8
+    });
+  }
+
+  let frames = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiPieces.forEach(p => {
+      p.y += p.vy;
+      p.x += p.vx;
+      p.rotation += p.vRot;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rotation * Math.PI) / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+
+    frames++;
+    if (frames < 120) {
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  animate();
+}
+
+</script>
+</body>
+</html>
